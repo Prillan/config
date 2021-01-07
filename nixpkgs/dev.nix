@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-{
-
+{ config, pkgs, ... }: {
   programs.jq.enable = true;
 
   home.file.".emacs".source = ./../dotfiles/emacs;
@@ -12,7 +10,7 @@
       epkgs.helm-ag
 
       # Latex
-#      epkgs.auctex 404???
+      # epkgs.auctex 404???
 
       # Modes
       epkgs.dockerfile-mode
@@ -62,6 +60,4 @@
     socketActivation.enable = true;
   };
   systemd.user.services.emacs.Service.Environment = "XMODIFIERS=";
-
-
 }

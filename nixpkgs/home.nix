@@ -53,7 +53,16 @@ in {
   home.packages = [
     pkgs.locale
     pkgs.glibcLocales
+
+    # Window manager, etc.
+    pkgs.pnmixer
     pkgs.xmonad-log # Required by xmonad/polybar
+
+    # "Apps"
+    pkgs.discord
+
+    # Writing(?)
+    pkgs.ispell
 
     # Compression
     pkgs.zstd
@@ -61,6 +70,7 @@ in {
     # Tools
     pkgs.dmenu
     pkgs.moreutils
+    pkgs.ncdu
     pkgs.nixfmt # Why not?
     pkgs.pandoc
     pkgs.ripgrep
@@ -79,6 +89,7 @@ in {
   };
 
   home.language.base = "en_US.UTF-8";
+  home.language.time = "sv_SE.UTF-8";
 
   programs.gpg = {
     enable = true;
@@ -107,14 +118,17 @@ in {
       custom = zsh-custom-path;
     };
     initExtra = ''
-      # unset SSH_AGENT_PID
-      # if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-      #     export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-      # fi
+      unset SSH_AGENT_PID
+      if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+          export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+      fi
 
       GIT_PROMPT_EXECUTABLE="haskell"
       source ${pkgs.zsh-git-prompt}/share/zsh-git-prompt/zshrc.sh
     '';
+    shellAliases = {
+      e = "emacsclient -c";
+    };
   };
 
   services.network-manager-applet.enable = true;
@@ -229,17 +243,23 @@ in {
   xsession = {
     enable = true;
     initExtra = ''
-      # xsetroot -solid black
+      xsetroot -solid black
       # gnome-screensaver &
-      # pnmixer &
-      # export GTK_IM_MODULE=ibus
-      # export XMODIFIERS=@im=ibus
-      # export QT_IM_MODULE=ibus
+      pnmixer &
+      export GTK_IM_MODULE=fctix
+      export XMODIFIERS=@im=fctix
+      export QT_IM_MODULE=fctix
+
+      if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+          export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+      fi
+
       # ibus-daemon -dx
     '';
     profileExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
 
+      # Not needed on NixOS
       # if [ -e /home/prillan/.nix-profile/etc/profile.d/nix.sh ]; then
       #    . /home/prillan/.nix-profile/etc/profile.d/nix.sh;
       # fi
