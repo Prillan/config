@@ -102,6 +102,12 @@ in {
     enable = true;
     settings = { telegram = import ./semi-secret/telegram.nix; };
   };
+  programs.ssh = {
+    enable = true;
+    compression = true;
+    controlMaster = "yes";
+    controlPersist = "30m";
+  };
   programs.urxvt = {
     enable = true;
     scroll.bar.enable = false;
