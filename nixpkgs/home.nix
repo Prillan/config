@@ -60,6 +60,7 @@ in {
 
     # "Apps"
     pkgs.discord
+    pkgs.thunderbird
 
     # Writing(?)
     pkgs.ispell
