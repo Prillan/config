@@ -60,6 +60,8 @@ in {
 
     # "Apps"
     pkgs.discord
+    pkgs.evince
+    pkgs.tdesktop
     pkgs.thunderbird
 
     # Writing(?)
