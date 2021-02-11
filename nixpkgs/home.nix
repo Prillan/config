@@ -70,13 +70,18 @@ in {
     # Compression
     pkgs.zstd
 
+    # Pandoc
+    pkgs.pandoc
+    pkgs.wkhtmltopdf
+
     # Tools
     pkgs.dmenu
     pkgs.moreutils
+    pkgs.haskellPackages.steeloverseer
     pkgs.ncdu
-    pkgs.nixfmt # Why not?
-    pkgs.pandoc
+    pkgs.nixfmt
     pkgs.ripgrep
+    pkgs.tree
     pkgs.up
 
     # Fonts
