@@ -1,10 +1,26 @@
 { config, pkgs, ... }: {
   programs.jq.enable = true;
 
+  home.packages = [
+    ## Scala
+    pkgs.lombok
+    pkgs.metals
+    pkgs.sbt
+
+    pkgs.binutils
+    pkgs.git-crypt
+    pkgs.kafkacat
+    pkgs.ncdu
+  ];
+  
   home.file.".emacs".source = ./../dotfiles/emacs;
   programs.emacs = {
     enable = true;
     extraPackages = epkgs: [
+      # Auto-complete
+      epkgs.company-lsp
+      epkgs.flycheck
+      
       # Searching
       epkgs.ag
       epkgs.helm-ag
@@ -13,15 +29,23 @@
       # epkgs.auctex 404???
 
       # Modes
+      epkgs.company-terraform
       epkgs.dockerfile-mode
       epkgs.haskell-mode
+      epkgs.groovy-mode
       epkgs.lsp-mode
       epkgs.lsp-ui
+      epkgs.lsp-haskell
+      epkgs.lsp-metals
+      epkgs.lsp-java
       epkgs.nix-mode
+      epkgs.markdown-mode
       epkgs.typescript-mode
       epkgs.yaml-mode
       epkgs.yasnippet
       epkgs.yasnippet-snippets
+      epkgs.scala-mode
+      epkgs.terraform-mode
 
       # Navigation
       epkgs.dumb-jump
@@ -35,7 +59,15 @@
       epkgs.projectile
       epkgs.projectile-ripgrep
 
+      # Themes
+      epkgs.doom-themes
+      
       # Other
+      epkgs.rainbow-delimiters
+      epkgs.helm
+      epkgs.edit-server
+      epkgs.dap-mode
+      epkgs.browse-at-remote
       epkgs.general
       epkgs.no-littering
       epkgs.string-inflection
@@ -46,13 +78,8 @@
 
   programs.git = {
     enable = true;
-    userEmail = "rasmus@precenth.eu";
-    userName = "Rasmus Précenth";
     ignores = import ./gitignores.nix;
-    signing = {
-      key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7";
-      signByDefault = true;
-    };
+    # Email, name and key needs to be defined elsewhere.
   };
 
   services.emacs = {

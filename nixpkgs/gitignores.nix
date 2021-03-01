@@ -35,4 +35,11 @@
   "ehthumbs.db"
   "elm-stuff"
   "node_modules"
+  ".bloop"
+  ".dir-locals"
+  ".metals"
+  ".sbtopts"
+  "metals.sbt"
+  ".projectile"
+  ".log"
 ]
