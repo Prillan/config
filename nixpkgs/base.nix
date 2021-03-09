@@ -93,6 +93,7 @@ in {
 
       # Tools
       pkgs.dmenu
+      pkgs.graphviz
       pkgs.gopass
       pkgs.haskellPackages.steeloverseer
       pkgs.moreutils
