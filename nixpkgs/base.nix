@@ -113,6 +113,7 @@ in {
       LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
       LOCALE_ARCHIVE_2_31 = "${pkgs.glibcLocales}/lib/locale/locale-archive";
       TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:/lib/terminfo";
+      SHELL = "${pkgs.zsh}/bin/zsh";
     };
 
     home.language.base = "en_US.UTF-8";
@@ -294,17 +295,15 @@ in {
         if [ -e /home/${config.home.username}/.nix-profile/etc/profile.d/nix.sh ]; then
            . /home/${config.home.username}/.nix-profile/etc/profile.d/nix.sh;
         fi
+        # if test -f $XDG_RUNTIME_DIR/gpg-agent-info && kill -0 $(head -n 1 $XDG_RUNTIME_DIR/gpg-agent-info | cut -d: -f2) 2>/dev/null ; then
+        #     eval $(< $XDG_RUNTIME_DIR/gpg-agent-info)
+        # else
+        #     eval $(gpg-agent --daemon --enable-ssh-support --write-env-file $XDG_RUNTIME_DIR/gpg-agent-info)
+        # fi
+        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+        export GPG_AGENT_INFO
       '') else
-        "") + ''
-          # if test -f $XDG_RUNTIME_DIR/gpg-agent-info && kill -0 $(head -n 1 $XDG_RUNTIME_DIR/gpg-agent-info | cut -d: -f2) 2>/dev/null ; then
-          #     eval $(< $XDG_RUNTIME_DIR/gpg-agent-info)
-          # else
-          #     eval $(gpg-agent --daemon --enable-ssh-support --write-env-file $XDG_RUNTIME_DIR/gpg-agent-info)
-          # fi
-
-          # export GPG_AGENT_INFO
-          # export SSH_AUTH_SOCK
-        '';
+        "");
     };
     xsession.windowManager.xmonad = {
       enable = true;
