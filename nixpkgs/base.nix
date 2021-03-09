@@ -161,7 +161,13 @@ in {
         GIT_PROMPT_EXECUTABLE="haskell"
         source ${pkgs.zsh-git-prompt}/share/zsh-git-prompt/zshrc.sh
       '';
-      shellAliases = { e = "emacsclient -c"; };
+      shellAliases = {
+        e = "emacsclient -c";
+        # Watch dir for changes to org files and compile to pdf.
+        # TODO: Backup files before starting.
+        wpdf =
+          "sos . -p '([^#]*).org' -c 'pandoc -f org -t pdf --pdf-engine wkhtmltopdf -i 0 -o 1.pdf'";
+      };
     };
 
     services.network-manager-applet.enable = true;
