@@ -206,6 +206,7 @@ Saves to a temp file and puts the filename in the kill ring."
   ("C-c g b" 'magit-blame)
   ("C-c g c" 'magit-commit)
   ("C-c g l" 'magit-log-current)
+  ("C-c g h" 'magit-log-buffer-file)
   ("C-c g s" 'magit-status)
   (:keymaps
    'dired-mode-map

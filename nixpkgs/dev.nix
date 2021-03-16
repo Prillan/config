@@ -82,6 +82,7 @@ in {
         # Git
         epkgs.magit
         epkgs.magit-todos
+        epkgs.forge
 
         # Projects
         epkgs.projectile
