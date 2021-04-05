@@ -86,6 +86,8 @@ in {
 
       # Compression
       pkgs.zstd
+      pkgs.zip
+      pkgs.unzip
 
       # Pandoc
       pkgs.pandoc
@@ -108,7 +110,7 @@ in {
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk
       pkgs.noto-fonts-emoji
-    ];
+    ] ++ (if cfg.onNixOS then [ pkgs.xclip ] else [ ]);
 
     home.sessionVariables = {
       LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
