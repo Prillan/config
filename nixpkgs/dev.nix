@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let cfg = config.dev;
+    emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) {};
 in {
   options.dev = {
     dotEmacs = mkOption {
@@ -37,6 +38,7 @@ in {
       base = builtins.readFile ./../dotfiles/emacs;
       extra = cfg.dotEmacs.extraLines;
     in ''
+      (setq -piper-load-path "${emacsPiper}")
       ${base}
       ;; Lines from dev.dotEmacs.extraLines
       ${extra}

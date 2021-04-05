@@ -55,6 +55,10 @@
   :demand t
   :commands (general-define-key))
 
+(use-package piper
+    :load-path (-piper-load-path)
+    :bind ("C-c C-|" . piper))
+
 (defun screenshot (type)
   "Save a screenshot of the current frame as an image in TYPE format.
 Saves to a temp file and puts the filename in the kill ring."
