@@ -221,8 +221,7 @@ Saves to a temp file and puts the filename in the kill ring."
    "C-x g" 'magit)
   :config
   ;; Unset pager as it is not supported properly inside emacs.
-  (setenv "GIT_PAGER" "")
-  (global-magit-file-mode 1))
+  (setenv "GIT_PAGER" ""))
 
 (use-package magit-todos-mode
   :defer 2)

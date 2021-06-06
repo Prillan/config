@@ -4,13 +4,11 @@ let
   cfg = config.dev;
   emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) { };
 
-  unstablePkgs = import (fetchTarball {
+  oldPkgs = import (fetchTarball {
     url =
-      "https://github.com/NixOS/nixpkgs/archive/9e377a6ce42dccd9b624ae4ce8f978dc892ba0e2.tar.gz";
-    sha256 = "1r3ll77hyqn28d9i4cf3vqd9v48fmaa1j8ps8c4fm4f8gqf4kpl1";
+      "https://github.com/NixOS/nixpkgs/archive/38fce8ec004b3e61c241e3b64c683f719644f350.tar.gz";
+    sha256 = "12azgdf3zihlxqiw33dx0w9afhgzka8pqha4irp7sn0jgka0zyxs";
   }) {};
-
-  metals = unstablePkgs.metals;
 in {
   options.dev = {
     dotEmacs = mkOption {
@@ -34,8 +32,8 @@ in {
     home.packages = [
       ## Scala
       pkgs.lombok
-      metals
-      pkgs.sbt
+      pkgs.metals
+      oldPkgs.sbt
 
       pkgs.binutils
       pkgs.git-crypt
@@ -57,7 +55,7 @@ in {
       enable = true;
       extraPackages = epkgs: [
         # Auto-complete
-        epkgs.company-lsp
+#        epkgs.company-lsp
         epkgs.flycheck
 
         # Searching
