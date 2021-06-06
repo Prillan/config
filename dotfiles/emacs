@@ -190,9 +190,13 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (use-package lsp-mode
   ;; Optional - enable lsp-mode automatically in scala files
-  :hook  (scala-mode . lsp)
-         (lsp-mode . lsp-lens-mode)
-  :config (setq lsp-prefer-flymake nil))
+  :hook
+  (scala-mode . lsp)
+  (lsp-mode . lsp-lens-mode)
+  :config
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-keymap-prefix "§")
+  (define-key lsp-mode-map (kbd "§") lsp-command-map))
 
 (use-package magit
   :defer 2
