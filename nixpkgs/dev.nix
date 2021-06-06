@@ -33,12 +33,12 @@ in {
       ## Scala
       pkgs.lombok
       pkgs.metals
-      oldPkgs.sbt
 
       pkgs.binutils
       pkgs.git-crypt
       pkgs.kafkacat
       pkgs.ncdu
+      pkgs.redis
     ];
 
     home.file.".emacs".text = let
@@ -118,6 +118,11 @@ in {
       enable = true;
       ignores = import ./gitignores.nix;
       # Email, name and key needs to be defined elsewhere.
+    };
+
+    programs.sbt = {
+      enable = true;
+      package = oldPkgs.sbt;
     };
 
     services.emacs = {
