@@ -8,6 +8,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Grid
+import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Util.EZConfig(additionalKeys)
@@ -49,6 +50,9 @@ myKeys = [ ((mod4Mask .|. shiftMask, xK_l), spawn "gnome-screensaver-command -l"
           (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
           pure ((m .|. mod4Mask, key), windows $ f name)
 
+myLayout = (avoidStruts $ withMobarLayouts)
+           ||| noBorders (fullscreenFull Full)
+
 main = do
 --    xmproc <- spawnPipe "/home/prillan/.local/bin/xmobar ~/.xmonad/xmobarrc"
     dbus <- D.connectSession
@@ -64,8 +68,7 @@ main = do
                        <+> (className =? "Xfce4-notifyd" --> doIgnore)
                        <+> manageHook def
         , workspaces = myWorkspaces
-        , layoutHook = (avoidStruts $ withMobarLayouts)
-                       ||| noBorders (fullscreenFull Full)
+        , layoutHook = myLayout
         , logHook = dynamicLogWithPP (myLogHook dbus)
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "exec urxvt"

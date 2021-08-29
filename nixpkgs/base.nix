@@ -66,7 +66,7 @@ in {
 
     # Config options:
     # https://rycee.gitlab.io/home-manager/options.html
-    # fonts.fontconfig.enable = true;
+    fonts.fontconfig.enable = true;
     home.packages = [
       pkgs.locale
       pkgs.glibcLocales
@@ -111,6 +111,7 @@ in {
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk
       pkgs.noto-fonts-emoji
+      pkgs.symbola
     ] ++ (if cfg.onNixOS then [ pkgs.xclip ] else [ ]);
 
     home.sessionVariables = {
@@ -140,11 +141,34 @@ in {
       controlMaster = "yes";
       controlPersist = "30m";
     };
-    programs.urxvt = {
-      enable = true;
-      scroll.bar.enable = false;
-      fonts = [ "xft:DejaVu Sans Mono:size=10" ];
-    };
+    programs.urxvt =
+      let inherit (builtins) concatStringsSep;
+          fonts = [
+            "xft:DejaVu Sans Mono:size=10"
+            "xft:Symbola"
+          ];
+          large = [
+            "xft:DejaVu Sans Mono:size=16"
+            "xft:Symbola"
+          ];
+          xlarge = [
+            "xft:DejaVu Sans Mono:size=24"
+            "xft:Symbola"
+          ];
+          set-font = f:
+            let
+              fstring = concatStringsSep "," f;
+            in "command:\\033]710;${fstring}\\007";
+      in {
+        enable = true;
+        scroll.bar.enable = false;
+        fonts = fonts;
+        keybindings = {
+          "C-plus" = set-font large;
+          "C-0" = set-font fonts;
+          "C-0x30" = set-font fonts;
+        };
+      };
 
     programs.zsh = {
       enable = true;
@@ -176,7 +200,7 @@ in {
     services.network-manager-applet.enable = true;
     services.polybar = {
       enable = true;
-      config = {
+      settings = {
         "colors" = colors;
         "bar/top" = {
           monitor = "\${env:MONITOR:${cfg.defaultMonitor}}";
@@ -184,68 +208,103 @@ in {
           radius = 0;
           background = colors.background;
           foreground = colors.foreground;
-          modules-center = "date";
-          modules-left = "xmonad";
-          modules-right = "cpu temperature memory network battery xkeyboard";
-          # font-0 = "DejaVu Sans Mono:pixelsize=10;1";
-          font-0 = "Noto Sans:style=Regular:pixelsize=10;1";
-          font-1 = "Noto Sans CJK SC:style=Regular:pixelsize=10;1";
-          font-2 = "Noto Emoji:style=Regular:pixelsize=10;1";
+          modules = {
+            center = "date";
+            left = "xmonad";
+            right = "cpu temperature memory network battery xkeyboard";
+          };
+          font = [
+            "Noto Sans:style=Regular:pixelsize=10;1"
+            "Noto Sans CJK SC:style=Regular:pixelsize=10;1"
+            "Noto Emoji:style=Regular:pixelsize=10:scale=12;1"
+          ];
 
-          tray-position = "right";
+          tray.position = "right";
         };
         "module/network" = {
           type = "internal/network";
           interface = cfg.wifiInterface;
           accumulate-stats = "true";
-          format-prefix = " | ";
-          format-connected = "<label-connected>";
-          format-connected-prefix = " | ";
-          format-connected-prefix-foreground = colors.icon;
-          label-connected = "%downspeed%↓%upspeed%↑";
+          format = {
+            prefix = " | ";
+            connected = "<label-connected>";
+            connected-prefix = " | ";
+            connected-prefix-foreground = colors.icon;
+          };
+          label.connected = "%downspeed%↓%upspeed%↑";
         };
         "module/xkeyboard" = {
           type = "internal/xkeyboard";
-          blacklist-0 = "num lock";
-          format-prefix = " | ";
-          format-prefix-foreground = colors.icon;
-          label-layout = "%layout%";
-          label-indicator-padding = "2";
-          label-indicator-background = colors.accent;
+          blacklist."0" = "num lock";
+          format = {
+            prefix = " | ";
+            prefix-foreground = colors.icon;
+          };
+          label = {
+            layout = "%layout%";
+            indicator = {
+              padding = "2";
+              background = colors.accent;
+            };
+          };
         };
         "module/battery" = {
           type = "internal/battery";
-          # TODO: Fix
-          format-prefix = " | ";
-          format-prefix-foreground = colors.icon;
+          full-at = 98;
+          format = {
+            charging-prefix = " | ";
+            charging-prefix-foreground = colors.icon;
+            discharging-prefix = " | ";
+            discharging-prefix-foreground = colors.icon;
+
+            full = "<label-full>";
+            charging = "<animation-charging> <label-charging>";
+            discharging = "<ramp-capacity> <label-discharging>";
+          };
+          label.full = "%percentage_raw%%";
+          ramp = {
+            capacity = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
+            capacity-0-background = colors.accent;
+            capacity-1-background = colors.accent;
+            capacity-2-foreground = colors.accent;
+          };
+          animation.charging = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
         };
         "module/cpu" = {
           type = "internal/cpu";
           label = "%percentage%%";
-          format-prefix = " ";
-          format-prefix-foreground = colors.icon;
+          format = {
+            prefix = " ";
+            prefix-foreground = colors.icon;
+          };
         };
         "module/date" = {
           type = "internal/date";
           internal = 5;
           date = "%Y-%m-%d";
           time = "%H:%M:%S";
-          label = "%date% %{F${colors.highlight}}-%{F-} %time%";
+          label = "%date% %{F${colors.icon}}-%{F-} %time%";
         };
         "module/memory" = {
           type = "internal/memory";
           label = "%gb_free% (%percentage_used%%)";
-          format-prefix = " | ";
-          format-prefix-foreground = colors.icon;
+          format = {
+            prefix = " | ";
+            prefix-foreground = colors.icon;
+          };
         };
         "module/temperature" = {
           type = "internal/temperature";
-          format-prefix = " ";
-          format-warn-prefix = " ";
-          label-foreground = colors.icon;
-          label-warn-foreground = colors.accent;
+          format = {
+            prefix = " ";
+            warn.prefix = " ";
+          };
+          label = {
+            foreground = colors.icon;
+            warn.foreground = colors.accent;
+          };
           units = "true";
-          warn-temperature = "75";
+          warn.temperature = "75";
         };
         "module/xmonad" = {
           type = "custom/script";
