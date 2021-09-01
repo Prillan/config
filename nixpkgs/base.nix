@@ -264,8 +264,8 @@ in {
           label.full = "%percentage_raw%%";
           ramp = {
             capacity = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
-            capacity-0-background = colors.accent;
-            capacity-1-background = colors.accent;
+            capacity-0-foreground = colors.accent;
+            capacity-1-foreground = colors.accent;
             capacity-2-foreground = colors.accent;
           };
           animation.charging = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
