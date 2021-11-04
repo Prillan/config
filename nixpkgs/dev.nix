@@ -30,6 +30,9 @@ in {
     programs.jq.enable = true;
 
     home.packages = [
+      ## Rust
+      pkgs.rust-analyzer
+
       ## Scala
       pkgs.lombok
       pkgs.metals
@@ -77,6 +80,7 @@ in {
         epkgs.lsp-java
         epkgs.nix-mode
         epkgs.markdown-mode
+        epkgs.rustic
         epkgs.typescript-mode
         epkgs.yaml-mode
         epkgs.yasnippet
