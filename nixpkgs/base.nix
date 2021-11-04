@@ -84,6 +84,7 @@ in {
 
       # Writing(?)
       pkgs.ispell
+      pkgs.texlive.combined.scheme-medium
 
       # Compression
       pkgs.zstd

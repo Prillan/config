@@ -63,7 +63,7 @@ in {
         epkgs.helm-ag
 
         # Latex
-        # epkgs.auctex 404???
+        epkgs.auctex
 
         # Modes
         epkgs.company-terraform
