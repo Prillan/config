@@ -42,7 +42,7 @@ in {
     ];
 
     home.file.".emacs".text = let
-      base = builtins.readFile ./../dotfiles/emacs;
+      base = builtins.readFile ./../dotfiles/emacs.el;
       extra = cfg.dotEmacs.extraLines;
     in ''
       (setq -piper-load-path "${emacsPiper}")
