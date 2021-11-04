@@ -74,6 +74,7 @@ in {
       # Window manager, etc.
       pkgs.pnmixer
       pkgs.xmonad-log # Required by xmonad/polybar
+      pkgs.scrot
 
       # "Apps"
       pkgs.discord
