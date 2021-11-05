@@ -96,6 +96,7 @@ in {
       pkgs.wkhtmltopdf
 
       # Tools
+      pkgs.cachix
       pkgs.dmenu
       pkgs.graphviz
       pkgs.gopass
@@ -204,7 +205,7 @@ in {
       settings = {
         "colors" = colors;
         "bar/top" = {
-          monitor = "\${env:MONITOR:${cfg.defaultMonitor}}";
+          monitor = "";
           width = "100%";
           radius = 0;
           background = colors.background;
@@ -346,7 +347,6 @@ in {
       enable = true;
       initExtra = ''
         xsetroot -solid black
-        # gnome-screensaver &
         pnmixer &
         export GTK_IM_MODULE=fctix
         export XMODIFIERS=@im=fctix
@@ -355,8 +355,6 @@ in {
         if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
             export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
         fi
-
-        # ibus-daemon -dx
       '';
       profileExtra = ''
         export PATH="$HOME/.local/bin:$PATH"

@@ -3,6 +3,7 @@ with lib;
 let
   cfg = config.dev;
   emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) { };
+  nix-haskell-hls = import (fetchTarball https://github.com/shajra/nix-haskell-hls/archive/refs/heads/main.tar.gz) {};
 
   oldPkgs = import (fetchTarball {
     url =
@@ -30,6 +31,9 @@ in {
     programs.jq.enable = true;
 
     home.packages = [
+      ## Haskell
+      nix-haskell-hls.hls-wrapper-nix
+
       ## Rust
       pkgs.rust-analyzer
 
@@ -49,6 +53,10 @@ in {
       extra = cfg.dotEmacs.extraLines;
     in ''
       (setq -piper-load-path "${emacsPiper}")
+      (setq lsp-java-vmargs
+        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
+
+      (setq lsp-haskell-server-path "${nix-haskell-hls.hls-wrapper-nix}/bin/hls-wrapper-nix")
       ${base}
       ;; Lines from dev.dotEmacs.extraLines
       ${extra}
@@ -127,6 +135,10 @@ in {
     programs.sbt = {
       enable = true;
       package = oldPkgs.sbt;
+      # % sbt
+      # Unrecognized VM option 'CMSClassUnloadingEnabled'
+      # Error: Could not create the Java Virtual Machine.
+      # Error: A fatal exception has occurred. Program will exit.
     };
 
     services.emacs = {

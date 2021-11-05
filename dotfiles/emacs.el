@@ -187,6 +187,10 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package dockerfile-mode)
 
 (require 'lsp)
+(require 'lsp-haskell)
+;; Hooks so haskell and literate haskell major modes trigger LSP setup
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
 
 (use-package lsp-mode
   ;; Optional - enable lsp-mode automatically in scala files
@@ -292,6 +296,18 @@ Saves to a temp file and puts the filename in the kill ring."
 (defun hash-uuidgen ()
   (interactive)
   (shell-command "uuidgen | xargs echo -n" (quote (4)) nil))
+
+(defun hash-uuid-split (str)
+  (interactive)
+  (concat (substring str 0 8)
+          "-"
+          (substring str 8 12)
+          "-"
+          (substring str 12 16)
+          "-"
+          (substring str 16 20)
+          "-"
+          (substring str 20 32)))
 
 ;;; Stefan Monnier <foo at acm.org>. It is the opposite of
 ;;; fill-paragraph
