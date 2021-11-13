@@ -1,7 +1,12 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
+with builtins;
+with lib;
+
 {
-  programs.mpv.enable = true;
-  home.packages = with pkgs; [
-    spotify
-  ];
+  config = mkIf config.profiles.graphical.enable {
+    programs.mpv.enable = true;
+    home.packages = with pkgs; [
+      spotify
+    ];
+  };
 }

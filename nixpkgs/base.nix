@@ -2,15 +2,6 @@
 with lib;
 let
   cfg = config.custom;
-  colors = rec {
-    background = "#222";
-    foreground = "#eee";
-    highlight = accent;
-    linecolor = "#fba922";
-    bordercolor = "#333";
-    accent = "#e60053";
-    icon = "#666";
-  };
   zsh-custom-path = let
     patch-script = ''
       function git_prompt_info() { git_super_status }
@@ -23,32 +14,32 @@ let
     };
   in zsh-git-prompt-patch + "/custom";
 in {
-  options.custom = {
-    onNixOS = mkOption {
-      type = types.bool;
-      default = true;
-      description = "whether on NixOS or not";
-    };
-    wifiInterface = mkOption {
-      type = types.str;
-      example = "wlan0";
-      description = "for polybar";
-    };
-    defaultMonitor = mkOption {
-      type = types.str;
-      default = "eDP-1";
-      example = "HDMI-1";
-      description = ''
-        Used to decide where to put polybar.
-      '';
+  options = {
+    custom = {
+      # TODO: Clean-up
+      onNixOS = mkOption {
+        type = types.bool;
+        default = true;
+        description = "whether on NixOS or not";
+      };
+      wifiInterface = mkOption {
+        type = types.str;
+        example = "wlan0";
+        description = "for polybar";
+      };
+
+      hostname = mkOption {
+        type = types.str;
+        example = "some-host";
+        description = "System hostname, used for backups";
+      };
     };
   };
-
-  imports = [ ./ctf.nix ./dev.nix ./media.nix ];
 
   config = {
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
+    nixpkgs.config.allowUnfree = true;
 
     # Home Manager needs a bit of information about you and the
     # paths it should manage.
@@ -71,17 +62,6 @@ in {
       pkgs.locale
       pkgs.glibcLocales
 
-      # Window manager, etc.
-      pkgs.pnmixer
-      pkgs.xmonad-log # Required by xmonad/polybar
-      pkgs.scrot
-
-      # "Apps"
-      pkgs.discord
-      pkgs.evince
-      pkgs.tdesktop
-      pkgs.thunderbird
-
       # Writing(?)
       pkgs.ispell
       pkgs.texlive.combined.scheme-medium
@@ -97,7 +77,6 @@ in {
 
       # Tools
       pkgs.cachix
-      pkgs.dmenu
       pkgs.graphviz
       pkgs.gopass
       pkgs.haskellPackages.steeloverseer
@@ -119,19 +98,14 @@ in {
     home.sessionVariables = {
       LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
       LOCALE_ARCHIVE_2_31 = "${pkgs.glibcLocales}/lib/locale/locale-archive";
-      TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:/lib/terminfo";
+      TERMINFO_DIRS = "${pkgs.rxvt-unicode-unwrapped.terminfo}/share/terminfo:/lib/terminfo";
       SHELL = "${pkgs.zsh}/bin/zsh";
     };
 
     home.language.base = "en_US.UTF-8";
     home.language.time = "sv_SE.UTF-8";
 
-    programs.gpg = {
-      enable = true;
-      settings = { default-key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7"; };
-    };
     programs.autojump.enable = true;
-    programs.feh.enable = true;
     programs.htop.enable = true;
     # programs.noti = {
     #   enable = true;
@@ -143,34 +117,6 @@ in {
       controlMaster = "yes";
       controlPersist = "30m";
     };
-    programs.urxvt =
-      let inherit (builtins) concatStringsSep;
-          fonts = [
-            "xft:DejaVu Sans Mono:size=10"
-            "xft:Symbola"
-          ];
-          large = [
-            "xft:DejaVu Sans Mono:size=16"
-            "xft:Symbola"
-          ];
-          xlarge = [
-            "xft:DejaVu Sans Mono:size=24"
-            "xft:Symbola"
-          ];
-          set-font = f:
-            let
-              fstring = concatStringsSep "," f;
-            in "command:\\033]710;${fstring}\\007";
-      in {
-        enable = true;
-        scroll.bar.enable = false;
-        fonts = fonts;
-        keybindings = {
-          "C-plus" = set-font large;
-          "C-0" = set-font fonts;
-          "C-0x30" = set-font fonts;
-        };
-      };
 
     programs.zsh = {
       enable = true;
@@ -197,206 +143,6 @@ in {
         wpdf =
           "sos . -p '([^#]*).org' -c 'pandoc -f org -t pdf --pdf-engine wkhtmltopdf -i \\0 -o \\1.pdf'";
       };
-    };
-
-    services.network-manager-applet.enable = true;
-    services.polybar = {
-      enable = true;
-      settings = {
-        "colors" = colors;
-        "bar/top" = {
-          monitor = "";
-          width = "100%";
-          radius = 0;
-          background = colors.background;
-          foreground = colors.foreground;
-          modules = {
-            center = "date";
-            left = "xmonad";
-            right = "cpu temperature memory network battery xkeyboard";
-          };
-          font = [
-            "Noto Sans:style=Regular:pixelsize=10;1"
-            "Noto Sans CJK SC:style=Regular:pixelsize=10;1"
-            "Noto Emoji:style=Regular:pixelsize=10:scale=12;1"
-          ];
-
-          tray.position = "right";
-        };
-        "module/network" = {
-          type = "internal/network";
-          interface = cfg.wifiInterface;
-          accumulate-stats = "true";
-          format = {
-            prefix = " | ";
-            connected = "<label-connected>";
-            connected-prefix = " | ";
-            connected-prefix-foreground = colors.icon;
-          };
-          label.connected = "%downspeed%↓%upspeed%↑";
-        };
-        "module/xkeyboard" = {
-          type = "internal/xkeyboard";
-          blacklist."0" = "num lock";
-          format = {
-            prefix = " | ";
-            prefix-foreground = colors.icon;
-          };
-          label = {
-            layout = "%layout%";
-            indicator = {
-              padding = "2";
-              background = colors.accent;
-            };
-          };
-        };
-        "module/battery" = {
-          type = "internal/battery";
-          full-at = 98;
-          format = {
-            charging-prefix = " | ";
-            charging-prefix-foreground = colors.icon;
-            discharging-prefix = " | ";
-            discharging-prefix-foreground = colors.icon;
-
-            full = "<label-full>";
-            charging = "<animation-charging> <label-charging>";
-            discharging = "<ramp-capacity> <label-discharging>";
-          };
-          label.full = "%percentage_raw%%";
-          ramp = {
-            capacity = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
-            capacity-0-foreground = colors.accent;
-            capacity-1-foreground = colors.accent;
-            capacity-2-foreground = colors.accent;
-          };
-          animation.charging = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
-        };
-        "module/cpu" = {
-          type = "internal/cpu";
-          label = "%percentage%%";
-          format = {
-            prefix = " ";
-            prefix-foreground = colors.icon;
-          };
-        };
-        "module/date" = {
-          type = "internal/date";
-          internal = 5;
-          date = "%Y-%m-%d";
-          time = "%H:%M:%S";
-          label = "%date% %{F${colors.icon}}-%{F-} %time%";
-        };
-        "module/memory" = {
-          type = "internal/memory";
-          label = "%gb_free% (%percentage_used%%)";
-          format = {
-            prefix = " | ";
-            prefix-foreground = colors.icon;
-          };
-        };
-        "module/temperature" = {
-          type = "internal/temperature";
-          format = {
-            prefix = " ";
-            warn.prefix = " ";
-          };
-          label = {
-            foreground = colors.icon;
-            warn.foreground = colors.accent;
-          };
-          units = "true";
-          warn.temperature = "75";
-        };
-        "module/xmonad" = {
-          type = "custom/script";
-          exec = "${pkgs.xmonad-log}/bin/xmonad-log";
-          tail = "true";
-        };
-      };
-      script = "polybar top &";
-    };
-
-    xresources.properties = {
-      "xterm*faceName" = "DejaVu Sans Mono:size=11";
-      "xterm*font" = "7x13";
-      "xterm*foreground" = "rgb:aa/aa/aa";
-      "xterm*background" = "rgb:05/05/05";
-      "URxvt*depth" = 32;
-      "URxvt*foreground" = "rgb:aa/aa/aa";
-      "URxvt*background" = "rgb:05/05/05/6464";
-      "*color0" = "#2E3436";
-      "*color8" = "#555753";
-      "*color1" = "#a40000";
-      "*color9" = "#EF2929";
-      "*color2" = "#4E9A06";
-      "*color10" = "#8AE234";
-      "*color3" = "#C4A000";
-      "*color11" = "#FCE94F";
-      "*color4" = "#3465A4";
-      "*color12" = "#729FCF";
-      "*color5" = "#75507B";
-      "*color13" = "#AD7FA8";
-      "*color6" = "#ce5c00";
-      "*color14" = "#fcaf3e";
-      "*color7" = "#babdb9";
-      "*color15" = "#EEEEEC";
-
-    };
-    xsession = {
-      enable = true;
-      initExtra = ''
-        xsetroot -solid black
-        pnmixer &
-        export GTK_IM_MODULE=fctix
-        export XMODIFIERS=@im=fctix
-        export QT_IM_MODULE=fctix
-
-        if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-            export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-        fi
-      '';
-      profileExtra = ''
-        export PATH="$HOME/.local/bin:$PATH"
-
-      '' + (if !cfg.onNixOS then (''
-        if [ -e /home/${config.home.username}/.nix-profile/etc/profile.d/nix.sh ]; then
-           . /home/${config.home.username}/.nix-profile/etc/profile.d/nix.sh;
-        fi
-        # if test -f $XDG_RUNTIME_DIR/gpg-agent-info && kill -0 $(head -n 1 $XDG_RUNTIME_DIR/gpg-agent-info | cut -d: -f2) 2>/dev/null ; then
-        #     eval $(< $XDG_RUNTIME_DIR/gpg-agent-info)
-        # else
-        #     eval $(gpg-agent --daemon --enable-ssh-support --write-env-file $XDG_RUNTIME_DIR/gpg-agent-info)
-        # fi
-        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-        export GPG_AGENT_INFO
-      '') else
-        "");
-    };
-    xsession.windowManager.xmonad = {
-      enable = true;
-      config = let
-        template = builtins.readFile ./xmonad.hs;
-        replaced = builtins.replaceStrings [
-          "$$FOREGROUND$$"
-          "$$BACKGROUND$$"
-          "$$ACCENT$$"
-          "$$LINE$$"
-          "$$BORDER$$"
-          "$$HIGHLIGHT$$"
-          "$$ICON$$"
-        ] [
-          colors.foreground
-          colors.background
-          colors.accent
-          colors.linecolor
-          colors.bordercolor
-          colors.highlight
-          colors.icon
-        ] template;
-      in builtins.toFile "xmonad.hs" replaced;
-      enableContribAndExtras = true;
-      extraPackages = haskellPackages: [ haskellPackages.dbus ];
     };
   };
 }

@@ -1,15 +1,11 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, sbt-pkgs, ... }:
 with lib;
 let
   cfg = config.dev;
   emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) { };
-  nix-haskell-hls = import (fetchTarball https://github.com/shajra/nix-haskell-hls/archive/refs/heads/main.tar.gz) {};
 
-  oldPkgs = import (fetchTarball {
-    url =
-      "https://github.com/NixOS/nixpkgs/archive/38fce8ec004b3e61c241e3b64c683f719644f350.tar.gz";
-    sha256 = "12azgdf3zihlxqiw33dx0w9afhgzka8pqha4irp7sn0jgka0zyxs";
-  }) {};
+  # TODO: Fix
+  # nix-haskell-hls = import (fetchTarball https://github.com/shajra/nix-haskell-hls/archive/refs/heads/main.tar.gz) {};
 in {
   options.dev = {
     dotEmacs = mkOption {
@@ -32,7 +28,8 @@ in {
 
     home.packages = [
       ## Haskell
-      nix-haskell-hls.hls-wrapper-nix
+      # TODO: Fix
+      # nix-haskell-hls.hls-wrapper-nix
 
       ## Rust
       pkgs.rust-analyzer
@@ -51,12 +48,13 @@ in {
     home.file.".emacs".text = let
       base = builtins.readFile ./../dotfiles/emacs.el;
       extra = cfg.dotEmacs.extraLines;
+      # TODO: Re-add
+      # (setq lsp-haskell-server-path "${nix-haskell-hls.hls-wrapper-nix}/bin/hls-wrapper-nix")
     in ''
       (setq -piper-load-path "${emacsPiper}")
       (setq lsp-java-vmargs
         '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
 
-      (setq lsp-haskell-server-path "${nix-haskell-hls.hls-wrapper-nix}/bin/hls-wrapper-nix")
       ${base}
       ;; Lines from dev.dotEmacs.extraLines
       ${extra}
@@ -64,9 +62,10 @@ in {
 
     programs.emacs = {
       enable = true;
+      package = mkIf (!config.profiles.graphical.enable) pkgs.emacs-nox;
       extraPackages = epkgs: [
         # Auto-complete
-#        epkgs.company-lsp
+        #        epkgs.company-lsp
         epkgs.flycheck
 
         # Searching
@@ -129,12 +128,17 @@ in {
     programs.git = {
       enable = true;
       ignores = import ./gitignores.nix;
-      # Email, name and key needs to be defined elsewhere.
+      userEmail = "rasmus@precenth.eu";
+      userName = "Rasmus Précenth";
+      signing = {
+        key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7";
+        signByDefault = true;
+      };
     };
 
     programs.sbt = {
       enable = true;
-      package = oldPkgs.sbt;
+      package = sbt-pkgs.sbt;
       # % sbt
       # Unrecognized VM option 'CMSClassUnloadingEnabled'
       # Error: Could not create the Java Virtual Machine.
