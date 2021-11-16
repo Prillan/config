@@ -10,7 +10,7 @@
 
   outputs = { self, nixpkgs, nixpkgs-old, home-manager }: {
     lib = {
-      homeConfigBase = { configuration, system ? "x86_64-linux" }: {
+      homeConfigBase = { configuration, system ? "x86_64-linux", ... }: {
         configuration = {
           imports = [ configuration ./nixpkgs/home.nix ];
         };
