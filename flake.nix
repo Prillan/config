@@ -6,13 +6,17 @@
     nixpkgs-old.url = "github:NixOS/nixpkgs/38fce8ec004b3e61c241e3b64c683f719644f350";
     home-manager.url = "github:nix-community/home-manager/release-21.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-review.url = "github:Mic92/nixpkgs-review";
+    nixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-old, home-manager }: {
+  outputs = { self, nixpkgs, nixpkgs-old, home-manager, nixpkgs-review }: {
     lib = {
       homeConfigBase = { configuration, system ? "x86_64-linux", ... }: {
         configuration = {
           imports = [ configuration ./nixpkgs/home.nix ];
+          # TODO: Fix, overlay vvvvv
+          home.packages = [ nixpkgs-review.defaultPackage.${system} ];
         };
         extraSpecialArgs = {
           sbt-pkgs = nixpkgs-old.legacyPackages.${system};
