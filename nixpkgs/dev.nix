@@ -31,6 +31,10 @@ in {
       # TODO: Fix
       # nix-haskell-hls.hls-wrapper-nix
 
+      # Nix
+      pkgs.nixfmt
+      pkgs.nixpkgs-fmt
+
       ## Rust
       pkgs.rust-analyzer
 

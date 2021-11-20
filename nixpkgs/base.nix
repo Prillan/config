@@ -82,7 +82,6 @@ in {
       pkgs.haskellPackages.steeloverseer
       pkgs.moreutils
       pkgs.ncdu
-      pkgs.nixfmt
       pkgs.python3
       pkgs.ripgrep
       pkgs.tree
