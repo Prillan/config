@@ -12,22 +12,18 @@
 
   outputs = { self, nixpkgs, nixpkgs-old, home-manager, nixpkgs-review }: {
     lib = {
-      homeConfigBase = { configuration, system ? "x86_64-linux", ... }: {
-        configuration = {
-          imports = [ configuration ./nixpkgs/home.nix ];
-          # TODO: Fix, overlay vvvvv
-          home.packages = [ nixpkgs-review.defaultPackage.${system} ];
-        };
-        extraSpecialArgs = {
-          sbt-pkgs = nixpkgs-old.legacyPackages.${system};
-        };
-      };
-      homeConfiguration = args@{ configuration, username ? "rasmus" , system ? "x86_64-linux" }:
-        home-manager.lib.homeManagerConfiguration (self.lib.homeConfigBase args // {
-          inherit system;
-          inherit username;
+      homeConfiguration = { configuration, username ? "rasmus" , system ? "x86_64-linux", extraModules ? [] }:
+        home-manager.lib.homeManagerConfiguration {
+          inherit system username configuration;
+          extraModules = [
+            ./nixpkgs/home.nix
+            { home.packages = [ nixpkgs-review.defaultPackage.${system} ]; }
+          ] ++ extraModules;
           homeDirectory = "/home/${username}";
-        });
+          extraSpecialArgs = {
+            sbt-pkgs = nixpkgs-old.legacyPackages.${system};
+          };
+        };
     };
 
     homeConfigurations = {
