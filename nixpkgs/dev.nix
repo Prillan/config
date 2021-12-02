@@ -150,6 +150,8 @@ in {
     };
 
     services.emacs.enable = true;
+    services.emacs.socketActivation.enable = true;
     systemd.user.services.emacs.Service.Environment = "XMODIFIERS=";
+    systemd.user.services.emacs.Service.Type = lib.mkForce "simple";
   };
 }
