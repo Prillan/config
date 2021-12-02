@@ -149,10 +149,7 @@ in {
       # Error: A fatal exception has occurred. Program will exit.
     };
 
-    services.emacs = {
-      enable = true;
-      socketActivation.enable = true;
-    };
+    services.emacs.enable = true;
     systemd.user.services.emacs.Service.Environment = "XMODIFIERS=";
   };
 }
