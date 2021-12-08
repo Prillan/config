@@ -113,8 +113,8 @@ in {
     programs.ssh = {
       enable = true;
       compression = true;
-      controlMaster = "yes";
-      controlPersist = "30m";
+      controlMaster = "auto";
+      controlPersist = "60m";
     };
 
     programs.zsh = {
