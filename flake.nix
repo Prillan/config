@@ -7,17 +7,21 @@
     home-manager.url = "github:nix-community/home-manager/release-21.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
     nixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-old, home-manager, nixpkgs-review }: {
+  outputs = { self, nixpkgs, nixpkgs-old, emacs-overlay, home-manager, nixpkgs-review }: {
     lib = {
       homeConfiguration = { configuration, username ? "rasmus" , system ? "x86_64-linux", extraModules ? [] }:
         home-manager.lib.homeManagerConfiguration {
           inherit system username configuration;
           extraModules = [
             ./nixpkgs/home.nix
-            { home.packages = [ nixpkgs-review.defaultPackage.${system} ]; }
+            {
+              home.packages = [ nixpkgs-review.defaultPackage.${system} ];
+              nixpkgs.overlays = [ emacs-overlay.overlay ];
+            }
           ] ++ extraModules;
           homeDirectory = "/home/${username}";
           extraSpecialArgs = {
