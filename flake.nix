@@ -1,6 +1,11 @@
 {
   description = "A very basic flake";
 
+  nixConfig = {
+    extra-substituters = "https://rprecenth.cachix.org";
+    extra-trusted-public-keys = "rprecenth.cachix.org-1:ZQOug0Ec0sckEbnimeHUUekj3NeMg+kz5vb3vqy5ajE=";
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
     nixpkgs-old.url = "github:NixOS/nixpkgs/38fce8ec004b3e61c241e3b64c683f719644f350";
