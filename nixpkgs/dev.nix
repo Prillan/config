@@ -126,6 +126,7 @@ in {
         epkgs.string-inflection
         epkgs.ripgrep
         epkgs.use-package
+        epkgs.po-mode
       ];
     };
 

@@ -59,6 +59,9 @@
     :load-path (-piper-load-path)
     :bind ("C-c C-|" . piper))
 
+(require 'po)
+(require 'po-mode)
+
 (use-package doom-themes
   :ensure t
   :config
