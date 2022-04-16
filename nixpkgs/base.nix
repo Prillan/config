@@ -77,6 +77,7 @@ in {
 
       # Tools
       pkgs.cachix
+      pkgs.dive
       pkgs.graphviz
       pkgs.gopass
       pkgs.haskellPackages.steeloverseer
