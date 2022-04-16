@@ -26,6 +26,22 @@
       },
       "original": {
         "owner": "numtide",
+        "ref": "master",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1638122382,
+        "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "74f7e4319258e287b0f9cb95426c9853b282730b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
         "repo": "flake-utils",
         "type": "github"
       }
@@ -48,6 +64,27 @@
         "owner": "nix-community",
         "ref": "release-21.11",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nix-tree": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1641083455,
+        "narHash": "sha256-3ehxzHnNti8jkm2bWElDvs+nQnObcMVPj36d3QLxQDA=",
+        "owner": "utdemir",
+        "repo": "nix-tree",
+        "rev": "cd94872e05f7b5a350d16c77e87d4be9e988866d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "utdemir",
+        "repo": "nix-tree",
         "type": "github"
       }
     },
@@ -85,7 +122,7 @@
     },
     "nixpkgs-review": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
@@ -122,6 +159,7 @@
       "inputs": {
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
+        "nix-tree": "nix-tree",
         "nixpkgs": "nixpkgs",
         "nixpkgs-old": "nixpkgs-old",
         "nixpkgs-review": "nixpkgs-review"
