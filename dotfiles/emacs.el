@@ -105,6 +105,16 @@ Saves to a temp file and puts the filename in the kill ring."
    "l" 'string-inflection-lower-camelcase
    "s" 'string-inflection-underscore))
 
+(use-package ispell
+  :custom
+  (ispell-program-name "hunspell"))
+
+(use-package flyspell
+  :hook
+  ((org-mode
+    text-mode) . flyspell-mode)
+  (prog-mode . flyspell-prog-mode))
+
 (use-package whitespace
   :custom
   (whitespace-line-column fill-column)
