@@ -64,6 +64,7 @@ in {
 
       # Writing(?)
       pkgs.ispell
+      (pkgs.hunspellWithDicts (with pkgs.hunspellDicts; [ sv_SE en_US ]))
       pkgs.texlive.combined.scheme-medium
 
       # Compression
