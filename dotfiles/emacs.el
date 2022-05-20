@@ -112,8 +112,7 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package flyspell
   :hook
   ((org-mode
-    text-mode) . flyspell-mode)
-  (prog-mode . flyspell-prog-mode))
+    text-mode) . flyspell-mode))
 
 (use-package whitespace
   :custom
