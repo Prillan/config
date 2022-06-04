@@ -72,7 +72,7 @@ main = do
         , logHook = dynamicLogWithPP (myLogHook dbus)
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "exec urxvt"
-        , normalBorderColor = Colors.color10
+        , normalBorderColor = Colors.color15
         , focusedBorderColor = Colors.color3
         } `additionalKeys` myKeys
 
@@ -89,12 +89,12 @@ withColor c =
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
     { ppOutput = dbusOutput dbus
-    , ppCurrent = pad . withColor Colors.color1
-    , ppVisible = pad . withColor Colors.foreground
+    , ppCurrent = pad . withColor Colors.foreground
+    , ppVisible = pad . withColor Colors.color1
     , ppUrgent = pad . withColor Colors.color1
-    , ppHidden = pad . withColor Colors.color2
+    , ppHidden = pad . withColor Colors.color11
     , ppWsSep = ""
-    , ppSep = withColor Colors.color2 " | "
+    , ppSep = withColor Colors.color9 " | "
     , ppTitle = withColor Colors.color9 . shorten 50
     }
 

@@ -1,10 +1,15 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 with builtins;
 
 let cfg = config.colors;
     load = f: fromJSON (readFile f);
     wal = load "${cfg.wal-dir}/colors.json";
 in {
+
+  config.home.packages = [
+    pkgs.pywal
+  ];
+
   options = {
     colors = {
       wal-dir = lib.mkOption {

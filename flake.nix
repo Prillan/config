@@ -57,6 +57,13 @@
                "$TARGET"
 
             popd
+
+            pushd "$TARGET"
+
+            sed -i 's/"wallpaper": ".*"/"wallpaper": "None"/' colors.json
+            sed -i 's/wallpaper=".*"/wallpaper="None"/' colors.hs
+
+            popd
           '';
         };
         in "${prog}/bin/copy-theme";
