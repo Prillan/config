@@ -2,7 +2,6 @@ import Data.Ratio ((%))
 import System.IO
 import XMonad
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
@@ -13,7 +12,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Run(spawnPipe)
-import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
 import qualified XMonad.StackSet as W
@@ -100,7 +98,7 @@ myLogHook dbus = def
     , ppCurrent = withColor colorHighlight
     , ppVisible = withColor colorForeground
     , ppUrgent = withColor colorAccent
-    , ppHidden = wrap " " " "
+    , ppHidden = withColor colorIcon
     , ppWsSep = ""
     , ppSep = withColor colorIcon " | "
     , ppTitle = withColor colorIcon . myAddSpaces 50
@@ -110,7 +108,7 @@ myLogHook dbus = def
 dbusOutput :: D.Client -> String -> IO ()
 dbusOutput dbus str = do
     let signal = (D.signal objectPath interfaceName memberName) {
-            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+            D.signalBody = [D.toVariant str]
         }
     D.emit dbus signal
   where
