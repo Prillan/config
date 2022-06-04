@@ -35,6 +35,28 @@
         };
     };
 
+    apps.x86_64-linux = {
+      # First run "wal ...", then "nix run .#copy-theme".
+      copy-theme = {
+        type = "app";
+        program = let prog = nixpkgs.legacyPackages.x86_64-linux.writeShellApplication {
+          name = "copy-theme";
+          text = ''
+            mkdir -p wal
+            TARGET=$(pwd)/wal
+            pushd ~/.cache/wal
+
+            cp colors{.json,.hs,.Xresources} \
+               colors-wal-dmenu.h \
+               "$TARGET"
+
+            popd
+          '';
+        };
+        in "${prog}/bin/copy-theme";
+      };
+    };
+
     homeConfigurations = {
       "rasmus@kalmiya" =  (self.lib.homeConfiguration {
         configuration = { ... }: {

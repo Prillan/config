@@ -9,6 +9,38 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    nixpkgs.overlays = [
+      (final: prev: {
+        dmenu = prev.dmenu.override {
+          patches = [
+            # NOTE: White space is very important here
+            (pkgs.writeText "config.h.wal.patch" ''
+              diff --git a/config.def.h b/config.def.h
+              index 1edb647..303dd5b 100644
+              --- a/config.def.h
+              +++ b/config.def.h
+              @@ -7,12 +7,9 @@ static const char *fonts[] = {
+               	"monospace:size=10"
+               };
+               static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+              -static const char *colors[SchemeLast][2] = {
+              -	/*     fg         bg       */
+              -	[SchemeNorm] = { "#bbbbbb", "#222222" },
+              -	[SchemeSel] = { "#eeeeee", "#005577" },
+              -	[SchemeOut] = { "#000000", "#00ffff" },
+              -};
+              +
+              +#include "${../../wal/colors-wal-dmenu.h}"
+              +
+               /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+               static unsigned int lines      = 0;
+            '')
+          ];
+        };
+      })
+    ];
+
     home.packages = [
       # Window manager, etc.
       pkgs.dmenu
@@ -164,31 +196,12 @@ in
       script = "polybar top &";
     };
 
-    xresources.properties = {
-      "xterm*faceName" = "DejaVu Sans Mono:size=11";
-      "xterm*font" = "7x13";
-      "xterm*foreground" = "rgb:aa/aa/aa";
-      "xterm*background" = "rgb:05/05/05";
-      "URxvt*depth" = 32;
-      "URxvt*foreground" = "rgb:aa/aa/aa";
-      "URxvt*background" = "rgb:05/05/05/6464";
-      "*color0" = "#2E3436";
-      "*color8" = "#555753";
-      "*color1" = "#a40000";
-      "*color9" = "#EF2929";
-      "*color2" = "#4E9A06";
-      "*color10" = "#8AE234";
-      "*color3" = "#C4A000";
-      "*color11" = "#FCE94F";
-      "*color4" = "#3465A4";
-      "*color12" = "#729FCF";
-      "*color5" = "#75507B";
-      "*color13" = "#AD7FA8";
-      "*color6" = "#ce5c00";
-      "*color14" = "#fcaf3e";
-      "*color7" = "#babdb9";
-      "*color15" = "#EEEEEC";
-
+    xresources = {
+      extraConfig = builtins.readFile ../../wal/colors.Xresources;
+      properties = {
+        "xterm*faceName" = "DejaVu Sans Mono:size=11";
+        "xterm*font" = "7x13";
+      };
     };
     xsession = {
       enable = true;
@@ -217,28 +230,12 @@ in
     };
     xsession.windowManager.xmonad = {
       enable = true;
-      config = let
-        template = builtins.readFile ../../dotfiles/xmonad.hs;
-        replaced = builtins.replaceStrings [
-          "$$FOREGROUND$$"
-          "$$BACKGROUND$$"
-          "$$ACCENT$$"
-          "$$LINE$$"
-          "$$BORDER$$"
-          "$$HIGHLIGHT$$"
-          "$$ICON$$"
-        ] [
-          config.colors.foreground
-          config.colors.background
-          config.colors.accent
-          config.colors.linecolor
-          config.colors.bordercolor
-          config.colors.highlight
-          config.colors.icon
-        ] template;
-      in pkgs.writeText "xmonad.hs" replaced;
+      config = ../../dotfiles/xmonad.hs;
       enableContribAndExtras = true;
       extraPackages = haskellPackages: [ haskellPackages.dbus ];
+      libFiles = {
+        "Colors.hs" = ../../wal/colors.hs;
+      };
     };
   };
 

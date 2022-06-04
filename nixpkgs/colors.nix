@@ -1,37 +1,19 @@
-{ config, lib, ... }:
+{ lib, ... }:
 with builtins;
-with lib;
 
-let cfg = config.colors;
+let wal = fromJSON (readFile ./../wal/colors.json);
 in {
-  options.colors = {
-    background = mkOption {
-      type = types.str;
-      default = "#222";
-    };
-    foreground = mkOption {
-      type = types.str;
-      default = "#eee";
-    };
-    highlight = mkOption {
-      type = types.str;
-      default = cfg.accent;
-    };
-    linecolor = mkOption {
-      type = types.str;
-      default = "#fba922";
-    };
-    bordercolor = mkOption {
-      type = types.str;
-      default = "#333";
-    };
-    accent = mkOption {
-      type = types.str;
-      default = "#e60053";
-    };
-    icon = mkOption {
-      type = types.str;
-      default = "#666";
+  options = {
+    colors = lib.mkOption {
+      type = lib.types.anything;
+      default = {
+        inherit wal;
+        inherit (wal.special) background foreground cursor;
+        accent = wal.colors.color1;
+        accent-dark = wal.colors.color8;
+        icon = wal.colors.color2;
+        icon-dark = wal.colors.color9;
+      };
     };
   };
 }
