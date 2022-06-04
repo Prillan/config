@@ -43,7 +43,13 @@
           name = "copy-theme";
           text = ''
             mkdir -p wal
-            TARGET=$(pwd)/wal
+            if [[ -v 1 ]]; then
+              pushd "$1"
+              TARGET="$(pwd)"
+              popd
+            else
+              TARGET=$(pwd)/wal
+            fi
             pushd ~/.cache/wal
 
             cp colors{.json,.hs,.Xresources} \

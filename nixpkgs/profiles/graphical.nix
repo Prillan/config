@@ -31,7 +31,7 @@ in
               -	[SchemeOut] = { "#000000", "#00ffff" },
               -};
               +
-              +#include "${../../wal/colors-wal-dmenu.h}"
+              +#include "${config.colors.wal-dir}/colors-wal-dmenu.h"
               +
                /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
                static unsigned int lines      = 0;
@@ -82,7 +82,7 @@ in
     services.polybar = {
       enable = true;
       settings = {
-        "colors" = config.colors;
+        "colors" = config.colors.wal.colors;
         "bar/top" = {
           monitor = "";
           width = "100%";
@@ -197,7 +197,7 @@ in
     };
 
     xresources = {
-      extraConfig = builtins.readFile ../../wal/colors.Xresources;
+      extraConfig = builtins.readFile "${config.colors.wal-dir}/colors.Xresources";
       properties = {
         "xterm*faceName" = "DejaVu Sans Mono:size=11";
         "xterm*font" = "7x13";
@@ -234,7 +234,7 @@ in
       enableContribAndExtras = true;
       extraPackages = haskellPackages: [ haskellPackages.dbus ];
       libFiles = {
-        "Colors.hs" = ../../wal/colors.hs;
+        "Colors.hs" = "${config.colors.wal-dir}/colors.hs";
       };
     };
   };
