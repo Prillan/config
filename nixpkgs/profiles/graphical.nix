@@ -9,7 +9,6 @@ in
   };
 
   config = mkIf cfg.enable {
-
     home.packages = [
       # Window manager, etc.
       pkgs.dmenu

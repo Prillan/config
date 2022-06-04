@@ -39,7 +39,11 @@ in {
   config = {
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
-    nixpkgs.config.allowUnfree = true;
+
+    nixpkgs.config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (pkg: true);
+    };
 
     # Home Manager needs a bit of information about you and the
     # paths it should manage.
@@ -81,7 +85,7 @@ in {
       pkgs.dive
       pkgs.graphviz
       pkgs.gopass
-      pkgs.haskellPackages.steeloverseer
+      # pkgs.haskellPackages.steeloverseer # BROKEN
       pkgs.moreutils
       pkgs.nix-tree
       pkgs.ncdu
@@ -142,8 +146,8 @@ in {
         e = "emacsclient -c";
         # Watch dir for changes to org files and compile to pdf.
         # TODO: Backup files before starting.
-        wpdf =
-          "sos . -p '([^#]*).org' -c 'pandoc -f org -t pdf --pdf-engine wkhtmltopdf -i \\0 -o \\1.pdf'";
+        # wpdf =
+        #   "sos . -p '([^#]*).org' -c 'pandoc -f org -t pdf --pdf-engine wkhtmltopdf -i \\0 -o \\1.pdf'";
       };
     };
   };
