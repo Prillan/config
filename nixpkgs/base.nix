@@ -89,10 +89,12 @@ in {
       pkgs.moreutils
       pkgs.nix-tree
       pkgs.ncdu
+      pkgs.pciutils
       pkgs.python3
       pkgs.ripgrep
       pkgs.tree
       pkgs.up
+      pkgs.usbutils
 
       # Fonts
       pkgs.noto-fonts
