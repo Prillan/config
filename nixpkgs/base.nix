@@ -100,6 +100,7 @@ in {
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk
       pkgs.noto-fonts-emoji
+      pkgs.roboto
       pkgs.symbola
     ] ++ (if cfg.onNixOS then [ pkgs.xclip ] else [ ]);
 
