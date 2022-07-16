@@ -15,7 +15,7 @@ in
       user = {
         extraGroups = mkOption {
           type = with types; listOf str;
-          default = [];
+          default = [ ];
           example = [ "nextcloud" ];
         };
       };
@@ -61,8 +61,8 @@ in
                 type = lines;
                 default = "";
                 example = ''
-                ssh-ed25519 <...>
-              '';
+                  ssh-ed25519 <...>
+                '';
               };
             };
           };
@@ -80,35 +80,42 @@ in
     users.groups.backup = { };
 
     programs.ssh.knownHosts = mkMerge (
-      mapAttrsToList (k: { target, ...}: mkIf (target.hostKeys != "" && target.host != "") {
-        "rsync-backup-${k}" = {
-          hostNames = [ target.host ];
-          publicKeyFile = pkgs.writeText "host-key" target.hostKeys;
-        };
-      }) cfg.scripts);
-
-    systemd.timers = mapAttrs' (k: _:
-      {
-        name = unit-name k;
-        value = {
-          wantedBy = [ "timers.target" ];
-          after = [ "multi-user.target" ]; # wait until the system hs started
-
-          timerConfig = {
-            OnCalendar = "Sun 02:00:00";
+      mapAttrsToList
+        (k: { target, ... }: mkIf (target.hostKeys != "" && target.host != "") {
+          "rsync-backup-${k}" = {
+            hostNames = [ target.host ];
+            publicKeyFile = pkgs.writeText "host-key" target.hostKeys;
           };
-        };
-      }) cfg.scripts;
+        })
+        cfg.scripts);
 
-    systemd.services = mapAttrs' (k: v:
-      {
-        name = unit-name k;
-        value = {
-          path = [ pkgs.openssh pkgs.rsync ];
-          script =
-            let ssh = if v.target.sshKeyFile != null
-                      then "ssh -i '${v.target.sshKeyFile}'"
-                      else "ssh";
+    systemd.timers = mapAttrs'
+      (k: _:
+        {
+          name = unit-name k;
+          value = {
+            wantedBy = [ "timers.target" ];
+            after = [ "multi-user.target" ]; # wait until the system hs started
+
+            timerConfig = {
+              OnCalendar = "Sun 02:00:00";
+            };
+          };
+        })
+      cfg.scripts;
+
+    systemd.services = mapAttrs'
+      (k: v:
+        {
+          name = unit-name k;
+          value = {
+            path = [ pkgs.openssh pkgs.rsync ];
+            script =
+              let
+                ssh =
+                  if v.target.sshKeyFile != null
+                  then "ssh -i '${v.target.sshKeyFile}'"
+                  else "ssh";
                 source = v.source.dir;
                 target =
                   if v.target.host == "" then v.target.dir
@@ -116,19 +123,22 @@ in
                     if v.target.user == "" then "${v.target.host}:${v.target.dir}"
                     else "${v.target.user}@${v.target.host}:${v.target.dir}";
                 filterFile = pkgs.writeText "${unit-name k}-filters" v.source.filters;
-                filterOpt = if v.source.filters != ""
-                            then "--filter='merge ${filterFile}'"
-                            else "";
-            in ''
-              set -x
-              echo "$(date): " '${source} -> ${target}'
-              rsync -e "${ssh}" -vrz ${filterOpt} '${source}' '${target}'
-            '';
-          serviceConfig = {
-            Type = "exec";
-            User = "backup";
+                filterOpt =
+                  if v.source.filters != ""
+                  then "--filter='merge ${filterFile}'"
+                  else "";
+              in
+              ''
+                set -x
+                echo "$(date): " '${source} -> ${target}'
+                rsync -e "${ssh}" -vrz ${filterOpt} '${source}' '${target}'
+              '';
+            serviceConfig = {
+              Type = "exec";
+              User = "backup";
+            };
           };
-        };
-      }) cfg.scripts;
+        })
+      cfg.scripts;
   };
 }
