@@ -28,6 +28,15 @@ in
               dir = mkOption {
                 type = str;
               };
+              filters = mkOption {
+                type = lines;
+                default = "";
+                example = ''
+                  - /foo
+                  + /some/
+                  + /some/path/
+                '';
+              };
             };
             target = {
               dir = mkOption {
@@ -106,10 +115,14 @@ in
                   else
                     if v.target.user == "" then "${v.target.host}:${v.target.dir}"
                     else "${v.target.user}@${v.target.host}:${v.target.dir}";
+                filterFile = pkgs.writeText "${unit-name k}-filters" v.source.filters;
+                filterOpt = if v.source.filters != ""
+                            then "--filter='merge ${filterFile}'"
+                            else "";
             in ''
               set -x
               echo "$(date): " '${source} -> ${target}'
-              rsync -e "${ssh}" -vrz '${source}' '${target}'
+              rsync -e "${ssh}" -vrz ${filterOpt} '${source}' '${target}'
             '';
           serviceConfig = {
             Type = "exec";
