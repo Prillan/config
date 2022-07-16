@@ -13,6 +13,11 @@ in
     rsync-backup = {
       enable = mkEnableOption "rsync backup scripts";
       user = {
+        name = mkOption {
+          type = types.str;
+          default = "rsync-backup";
+          example = "backup-user";
+        };
         extraGroups = mkOption {
           type = with types; listOf str;
           default = [ ];
@@ -72,12 +77,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    users.users.rsync-backup = {
-      group = "rsync-backup";
+    users.users.${cfg.user.name} = {
+      group = cfg.user.name;
       isSystemUser = true;
       extraGroups = cfg.user.extraGroups;
     };
-    users.groups.backup = { };
+    users.groups.${cfg.user.name} = { };
 
     programs.ssh.knownHosts = mkMerge (
       mapAttrsToList
@@ -135,7 +140,7 @@ in
               '';
             serviceConfig = {
               Type = "exec";
-              User = "backup";
+              User = cfg.user.name;
             };
           };
         })
