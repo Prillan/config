@@ -81,5 +81,7 @@
         };
       });
     };
+
+    nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
   };
 }
