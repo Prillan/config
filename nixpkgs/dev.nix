@@ -3,6 +3,7 @@ with lib;
 let
   cfg = config.dev;
   emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) { };
+  kokaMode = "${pkgs.koka.src}/support/emacs/";
 
   # TODO: Fix
   # nix-haskell-hls = import (fetchTarball https://github.com/shajra/nix-haskell-hls/archive/refs/heads/main.tar.gz) {};
@@ -56,6 +57,7 @@ in {
       # (setq lsp-haskell-server-path "${nix-haskell-hls.hls-wrapper-nix}/bin/hls-wrapper-nix")
     in ''
       (setq -piper-load-path "${emacsPiper}")
+      (setq -koka-load-path "${kokaMode}")
       (setq lsp-java-vmargs
         '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
 
