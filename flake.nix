@@ -8,7 +8,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
-    nixpkgs-old.url = "github:NixOS/nixpkgs/38fce8ec004b3e61c241e3b64c683f719644f350";
     home-manager.url = "github:nix-community/home-manager/release-22.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
@@ -16,7 +15,7 @@
     nixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-old, emacs-overlay, home-manager, nixpkgs-review }: {
+  outputs = { self, nixpkgs, emacs-overlay, home-manager, nixpkgs-review }: {
     lib = {
       homeConfiguration = { configuration, username ? "rasmus" , system ? "x86_64-linux", extraModules ? [] }:
         home-manager.lib.homeManagerConfiguration {
@@ -29,9 +28,6 @@
             }
           ] ++ extraModules;
           homeDirectory = "/home/${username}";
-          extraSpecialArgs = {
-            sbt-pkgs = nixpkgs-old.legacyPackages.${system};
-          };
         };
     };
 

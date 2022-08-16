@@ -1,4 +1,4 @@
-{ config, lib, pkgs, sbt-pkgs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   cfg = config.dev;
@@ -143,15 +143,8 @@ in {
       };
     };
 
-    programs.sbt = {
-      enable = true;
-      package = sbt-pkgs.sbt;
-      # % sbt
-      # Unrecognized VM option 'CMSClassUnloadingEnabled'
-      # Error: Could not create the Java Virtual Machine.
-      # Error: A fatal exception has occurred. Program will exit.
-    };
-
+    programs.sbt.enable = true;
+    
     services.emacs.enable = true;
     services.emacs.socketActivation.enable = true;
     systemd.user.services.emacs.Service.Environment = "XMODIFIERS=";
