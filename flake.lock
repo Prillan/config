@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1660448139,
-        "narHash": "sha256-75TtjQ+FLBLsJJ4qBLLSnQJZ4lj5M0TUrhCT++dtpiY=",
+        "lastModified": 1661048606,
+        "narHash": "sha256-s5kRhiNnsAe5YoQhFZQS5MS+is0z9UjWlYvuObTGjjg=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "c6c28e96e85c5945c76eef5fb9814371d2d8a1b5",
+        "rev": "798ab8fd2043e8b800a70a3eebd42388e34cf708",
         "type": "github"
       },
       "original": {
@@ -72,32 +72,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1660375717,
-        "narHash": "sha256-U/wSSm6eMfNoMG2Rq48+KPwJIq8bfuW/qcf5digYZ8g=",
+        "lastModified": 1661008273,
+        "narHash": "sha256-UpDqsGzUswIHG7FwzeIewjWlElF17UVLNbI2pwlbcBY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "65c15b0a26593a77e65e4212d8d9f58d83844f07",
+        "rev": "0cc6444e74cd21e8da8d81ef4cd778492e10f843",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
         "type": "indirect"
-      }
-    },
-    "nixpkgs-old": {
-      "locked": {
-        "lastModified": 1622456856,
-        "narHash": "sha256-uvsP1HwSWH1ujkRBfJGa/0GnEge9jcEj7hTGP1x7X4k=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "38fce8ec004b3e61c241e3b64c683f719644f350",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "38fce8ec004b3e61c241e3b64c683f719644f350",
-        "type": "github"
       }
     },
     "nixpkgs-review": {
@@ -121,11 +105,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1660318005,
-        "narHash": "sha256-g9WCa9lVUmOV6dYRbEPjv/TLOR5hamjeCcKExVGS3OQ=",
+        "lastModified": 1661009065,
+        "narHash": "sha256-i+Q2ttGp4uOL3j0wEYP3MXLcu/4L/WbChxGQogiNSZo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5c211b47aeadcc178c5320afd4e74c7eed5c389f",
+        "rev": "9a91318fffec81ad009b73fd3b640d2541d87909",
         "type": "github"
       },
       "original": {
@@ -156,7 +140,6 @@
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-old": "nixpkgs-old",
         "nixpkgs-review": "nixpkgs-review"
       }
     }
