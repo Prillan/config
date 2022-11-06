@@ -71,8 +71,9 @@
         configuration = { ... }: {
           custom.hostname = "kalmiya";
           custom.wifiInterface = "wlp2s0";
-          profiles.graphical.enable = true;
           profiles.fluff.enable = true;
+          profiles.graphical.enable = true;
+          profiles.mapping.enable = true;
           borg.enable = true;
         };
       });
