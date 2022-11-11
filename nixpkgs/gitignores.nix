@@ -42,4 +42,5 @@
   "metals.sbt"
   ".projectile"
   ".log"
+  ".bsp"
 ]
