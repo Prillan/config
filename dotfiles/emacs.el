@@ -67,6 +67,8 @@
 (require 'po)
 (require 'po-mode)
 
+(require 'restclient)
+
 (use-package doom-themes
   :ensure t
   :config

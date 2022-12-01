@@ -127,6 +127,7 @@ in {
         epkgs.no-littering
         epkgs.po-mode
         epkgs.rainbow-delimiters
+        epkgs.restclient
         epkgs.ripgrep
         epkgs.string-inflection
         epkgs.use-package
