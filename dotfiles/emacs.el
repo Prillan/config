@@ -214,6 +214,9 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (use-package dockerfile-mode)
 
+(use-package jq-mode
+  :mode "\\.jq\\'")
+
 (require 'lsp)
 (require 'lsp-haskell)
 ;; Hooks so haskell and literate haskell major modes trigger LSP setup

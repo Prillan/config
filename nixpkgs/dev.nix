@@ -84,22 +84,23 @@ in {
         # Modes
         epkgs.company-terraform
         epkgs.dockerfile-mode
-        epkgs.haskell-mode
         epkgs.groovy-mode
+        epkgs.haskell-mode
+        epkgs.jq-mode
+        epkgs.lsp-haskell
+        epkgs.lsp-java
+        epkgs.lsp-metals
         epkgs.lsp-mode
         epkgs.lsp-ui
-        epkgs.lsp-haskell
-        epkgs.lsp-metals
-        epkgs.lsp-java
-        epkgs.nix-mode
         epkgs.markdown-mode
+        epkgs.nix-mode
         epkgs.rustic
+        epkgs.scala-mode
+        epkgs.terraform-mode
         epkgs.typescript-mode
         epkgs.yaml-mode
         epkgs.yasnippet
         epkgs.yasnippet-snippets
-        epkgs.scala-mode
-        epkgs.terraform-mode
 
         # Navigation
         epkgs.dumb-jump
@@ -118,17 +119,17 @@ in {
         epkgs.doom-themes
 
         # Other
-        epkgs.rainbow-delimiters
-        epkgs.helm
-        epkgs.edit-server
-        epkgs.dap-mode
         epkgs.browse-at-remote
+        epkgs.dap-mode
+        epkgs.edit-server
         epkgs.general
+        epkgs.helm
         epkgs.no-littering
-        epkgs.string-inflection
-        epkgs.ripgrep
-        epkgs.use-package
         epkgs.po-mode
+        epkgs.rainbow-delimiters
+        epkgs.ripgrep
+        epkgs.string-inflection
+        epkgs.use-package
       ];
     };
 
