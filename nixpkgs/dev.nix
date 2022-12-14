@@ -28,9 +28,12 @@ in {
     programs.jq.enable = true;
 
     home.packages = [
-      ## Haskell
-      # TODO: Fix
-      # nix-haskell-hls.hls-wrapper-nix
+      # Direnv
+      pkgs.direnv
+
+      # Haskell
+      pkgs.cabal-install
+      pkgs.haskell-language-server
 
       # Nix
       pkgs.nixfmt
@@ -53,8 +56,6 @@ in {
     home.file.".emacs".text = let
       base = builtins.readFile ./../dotfiles/emacs.el;
       extra = cfg.dotEmacs.extraLines;
-      # TODO: Re-add
-      # (setq lsp-haskell-server-path "${nix-haskell-hls.hls-wrapper-nix}/bin/hls-wrapper-nix")
     in ''
       (setq -piper-load-path "${emacsPiper}")
       (setq -koka-load-path "${kokaMode}")
@@ -115,6 +116,7 @@ in {
         epkgs.forge
 
         # Projects
+        epkgs.direnv
         epkgs.projectile
         epkgs.projectile-ripgrep
 
@@ -149,7 +151,7 @@ in {
     };
 
     programs.sbt.enable = true;
-    
+
     services.emacs.enable = true;
     services.emacs.socketActivation.enable = true;
     systemd.user.services.emacs.Service.Environment = "XMODIFIERS=";

@@ -60,6 +60,10 @@
     :load-path (-piper-load-path)
     :bind ("C-c C-|" . piper))
 
+(use-package direnv
+  :config
+  (direnv-mode))
+
 (use-package koka-mode
   :load-path (-koka-load-path)
   :mode "\\.kk\\'")
@@ -221,19 +225,21 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (require 'lsp)
 (require 'lsp-haskell)
-;; Hooks so haskell and literate haskell major modes trigger LSP setup
-(add-hook 'haskell-mode-hook #'lsp)
-(add-hook 'haskell-literate-mode-hook #'lsp)
 
 (use-package lsp-mode
-  ;; Optional - enable lsp-mode automatically in scala files
   :hook
   (scala-mode . lsp)
+  (haskell-mode . lsp)
   (lsp-mode . lsp-lens-mode)
   :config
   (setq lsp-prefer-flymake nil)
   (setq lsp-keymap-prefix "§")
   (define-key lsp-mode-map (kbd "§") lsp-command-map))
+
+(setq gc-cons-threshold (* 8 1024 1024))
+(setq read-process-output-max (* 1024 1024))
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+
 
 (use-package magit
   :defer 2
