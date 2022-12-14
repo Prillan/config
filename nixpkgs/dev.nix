@@ -69,7 +69,7 @@ in {
     programs.emacs = {
       enable = true;
       package = mkMerge [
-        (mkIf (config.profiles.graphical.enable) pkgs.emacsNativeComp)
+        (mkIf (config.profiles.graphical.enable) pkgs.emacsUnstable)
         (mkIf (!config.profiles.graphical.enable) pkgs.emacsUnstable-nox)
       ];
       extraPackages = epkgs: [
