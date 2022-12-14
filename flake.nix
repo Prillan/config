@@ -11,8 +11,8 @@
     home-manager.url = "github:nix-community/home-manager/release-22.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
+    nixpkgs-review.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    nixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, emacs-overlay, home-manager, nixpkgs-review }: {
