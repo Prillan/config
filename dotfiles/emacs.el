@@ -240,6 +240,17 @@ Saves to a temp file and puts the filename in the kill ring."
 (setq read-process-output-max (* 1024 1024))
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 
+(use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+(use-package nix-drv-mode
+  :ensure nix-mode
+  :mode "\\.drv\\'")
+(use-package nix-shell
+  :ensure nix-mode
+  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+(use-package nix-repl
+  :ensure nix-mode
+  :commands (nix-repl))
 
 (use-package magit
   :defer 2

@@ -97,7 +97,10 @@ in {
         epkgs.lsp-mode
         epkgs.lsp-ui
         epkgs.markdown-mode
+
         epkgs.nix-mode
+        epkgs.reformatter
+
         epkgs.rustic
         epkgs.scala-mode
         epkgs.terraform-mode
