@@ -90,6 +90,7 @@ in {
         epkgs.dockerfile-mode
         epkgs.groovy-mode
         epkgs.haskell-mode
+        epkgs.hledger-mode
         epkgs.jq-mode
         epkgs.lsp-haskell
         epkgs.lsp-java

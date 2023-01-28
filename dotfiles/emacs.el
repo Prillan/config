@@ -236,6 +236,9 @@ Saves to a temp file and puts the filename in the kill ring."
   (setq lsp-keymap-prefix "§")
   (define-key lsp-mode-map (kbd "§") lsp-command-map))
 
+(use-package hledger-mode
+  :mode ("\\.journal\\'" "\\.hledger\\'"))
+
 (setq gc-cons-threshold (* 8 1024 1024))
 (setq read-process-output-max (* 1024 1024))
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
