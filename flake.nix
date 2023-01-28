@@ -53,7 +53,7 @@
             fi
             pushd ~/.cache/wal
 
-            cp colors{.json,.hs,.Xresources} \
+            cp colors{.json,.hs,.Xresources,-kitty.conf,-sway,-waybar.css} \
                colors-wal-dmenu.h \
                "$TARGET"
 
@@ -63,6 +63,7 @@
 
             sed -i 's/"wallpaper": ".*"/"wallpaper": "None"/' colors.json
             sed -i 's/wallpaper=".*"/wallpaper="None"/' colors.hs
+            sed -i '/set .wallpaper/d' colors-sway
 
             popd
           '';
@@ -77,7 +78,7 @@
           custom.hostname = "kalmiya";
           custom.wifiInterface = "wlp2s0";
           profiles.fluff.enable = true;
-          profiles.graphical.enable = true;
+          profiles.graphical.wayland.enable = true;
           profiles.mapping.enable = true;
           borg.enable = true;
         };
