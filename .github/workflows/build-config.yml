@@ -28,6 +28,7 @@ jobs:
         with:
           name: rprecenth
           authToken: ${{ secrets.CACHIX_TOKEN }}
+          extraPullNames: nix-community
       - name: Build config
         run: >
           cachix watch-exec rprecenth nix -- build -j 4 -L .#homeConfigurations."rasmus@kalmiya".activationPackage
