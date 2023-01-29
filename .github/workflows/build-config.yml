@@ -24,7 +24,7 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GH_TOKEN_FOR_UPDATES }}
       - name: Cachix
-        uses: cachix/cachix-action@v10
+        uses: cachix/cachix-action@v12
         with:
           name: rprecenth
           authToken: ${{ secrets.CACHIX_TOKEN }}
