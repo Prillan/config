@@ -3,6 +3,7 @@ with builtins;
 with lib;
 let cfg = config.profiles.graphical.wayland;
     lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -S --clock --effect-pixelate 10 --effect-blur 10x10 -k";
+    inherit (pkgs.sway-contrib) grimshot;
 in
 {
   options.profiles.graphical.wayland = {
@@ -11,6 +12,10 @@ in
 
   config = mkIf cfg.enable {
     profiles.graphical.common.enable = true;
+
+    home.packages = [
+      grimshot
+    ];
 
     programs.emacs.package = pkgs.emacsPgtk;
     programs.mako.enable = true;
@@ -30,9 +35,15 @@ in
         bars = []; # Handled by waybar instead.
         keybindings =
           let modifier = config.wayland.windowManager.sway.config.modifier;
+              grimshot-cmd = "${grimshot}/bin/grimshot --notify";
           in lib.mkOptionDefault {
             "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --";
             "${modifier}+Shift+l" = "exec ${lockCommand}";
+
+            "${modifier}+Print" = "exec ${grimshot-cmd} save active";
+            "${modifier}+Shift+Print" = "exec ${grimshot-cmd} save area";
+            "${modifier}+Mod1+Print" = "exec ${grimshot-cmd} save output";
+            "${modifier}+Ctrl+Print" = "exec ${grimshot-cmd} save window";
           };
         input = {
           "*" = {
