@@ -45,6 +45,9 @@ in
             "${modifier}+Shift+Print" = "exec ${grimshot-cmd} save area";
             "${modifier}+Mod1+Print" = "exec ${grimshot-cmd} save output";
             "${modifier}+Ctrl+Print" = "exec ${grimshot-cmd} save window";
+
+            # mod+§
+            "${modifier}+section" = "move workspace to output next";
           };
         input = {
           "*" = {
