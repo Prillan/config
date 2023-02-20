@@ -2,7 +2,8 @@
 with builtins;
 with lib;
 let cfg = config.profiles.graphical.wayland;
-    lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -S --clock --effect-pixelate 10 --effect-blur 10x10 -k";
+    lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f -S --clock --effect-pixelate 10 --effect-blur 10x10 -k";
+
     inherit (pkgs.sway-contrib) grimshot;
 in
 {

@@ -98,6 +98,7 @@ in {
       pkgs.usbutils
 
       # Fonts
+      pkgs.carlito
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk
       pkgs.noto-fonts-emoji
