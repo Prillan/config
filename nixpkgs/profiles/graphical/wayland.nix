@@ -113,6 +113,18 @@ in
             }
           ];
         };
+        home-docked = {
+          outputs = [
+            {
+              criteria = "eDP-1";
+              position = "2560,0";
+            }
+            {
+              criteria = "Samsung Electric Company LS27A600U H4ZRC01423";
+              position = "0,0";
+            }
+          ];
+        };
       };
     };
   };
