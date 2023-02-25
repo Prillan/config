@@ -4,6 +4,15 @@ with lib;
 let cfg = config.profiles.graphical.wayland;
     lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f -S --clock --effect-pixelate 10 --effect-blur 10x10 -k";
 
+    swaymsg = "${pkgs.sway}/bin/swaymsg";
+    sway-commands = {
+      move-to-next-output = pkgs.writeScript "next-output" ''
+        ${swaymsg} -t get_outputs \
+          | jq '.[(map(.focused) | index(true) + 1) % length].name' \
+          | xargs ${swaymsg} move workspace to
+      '';
+    };
+
     inherit (pkgs.sway-contrib) grimshot;
 in
 {
@@ -38,7 +47,7 @@ in
           let modifier = config.wayland.windowManager.sway.config.modifier;
               grimshot-cmd = "${grimshot}/bin/grimshot --notify";
           in lib.mkOptionDefault {
-            "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --";
+            "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs ${swaymsg} exec --";
             "${modifier}+Shift+l" = "exec ${lockCommand}";
 
             "${modifier}+Print" = "exec ${grimshot-cmd} save active";
@@ -47,7 +56,7 @@ in
             "${modifier}+Ctrl+Print" = "exec ${grimshot-cmd} save window";
 
             # mod+§
-            "${modifier}+section" = "move workspace to output next";
+            "${modifier}+section" = "exec ${sway-commands.move-to-next-output}";
           };
         input = {
           "*" = {
