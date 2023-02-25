@@ -47,7 +47,7 @@ in
           let modifier = config.wayland.windowManager.sway.config.modifier;
               grimshot-cmd = "${grimshot}/bin/grimshot --notify";
           in lib.mkOptionDefault {
-            "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs ${swaymsg} exec --";
+            "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.wofi}/bin/wofi --dmenu | ${pkgs.findutils}/bin/xargs ${swaymsg} exec --";
             "${modifier}+Shift+l" = "exec ${lockCommand}";
 
             "${modifier}+Print" = "exec ${grimshot-cmd} save active";
