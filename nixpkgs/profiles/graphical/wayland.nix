@@ -2,7 +2,11 @@
 with builtins;
 with lib;
 let cfg = config.profiles.graphical.wayland;
-    lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f -S --clock --effect-pixelate 10 --effect-blur 10x10 -k";
+    lockCommand = pkgs.writeScript "lock" ''
+      ${pkgs.swaylock-effects}/bin/swaylock -f -S -k --clock \
+        --effect-pixelate 10 \
+        --effect-blur 10x10
+    '';
 
     swaymsg = "${pkgs.sway}/bin/swaymsg";
     sway-commands = {
@@ -97,11 +101,11 @@ in
 
     services.swayidle.enable = true;
     services.swayidle.events = [
-      { event = "before-sleep"; command = lockCommand; }
-      { event = "lock"; command = lockCommand; }
+      { event = "before-sleep"; command = "${lockCommand}"; }
+      { event = "lock"; command = "${lockCommand}"; }
     ];
     services.swayidle.timeouts = [
-      { timeout = 600; command = "swaymsg 'output * dpms off'"; resumeCommand = "swaymsg 'output * dpms on'"; }
+      { timeout = 600; command = "swaymsg \"output * dpms off\""; resumeCommand = "swaymsg \"output * dpms on\""; }
     ];
     services.kanshi = {
       enable = true;
