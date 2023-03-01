@@ -1,0 +1,20 @@
+
+set $background #fdfefe
+set $foreground #15232C
+
+set $color0 #fdfefe
+set $color1 #5690A7
+set $color2 #5CB1C9
+set $color3 #56BBD2
+set $color4 #90A0A8
+set $color5 #93BAC8
+set $color6 #A1D6E3
+set $color7 #15232C
+set $color8 #939697
+set $color9 #5690A7
+set $color10 #5CB1C9
+set $color11 #56BBD2
+set $color12 #90A0A8
+set $color13 #93BAC8
+set $color14 #A1D6E3
+set $color15 #15232C

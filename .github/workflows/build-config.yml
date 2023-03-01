@@ -29,6 +29,9 @@ jobs:
           name: rprecenth
           authToken: ${{ secrets.CACHIX_TOKEN }}
           extraPullNames: nix-community
+      - name: Run checks
+        run: >
+          cachix watch-exec rprecenth nix -- flake check -j 4 -L
       - name: Build config
         run: >
           cachix watch-exec rprecenth nix -- build -j 4 -L .#homeConfigurations."rasmus@kalmiya".activationPackage

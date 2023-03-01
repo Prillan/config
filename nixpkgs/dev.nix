@@ -69,10 +69,7 @@ in {
 
     programs.emacs = {
       enable = true;
-      package = mkMerge [
-        (mkIf (config.profiles.graphical.enable) pkgs.emacsUnstable)
-        (mkIf (!config.profiles.graphical.enable) pkgs.emacsUnstable-nox)
-      ];
+      package = mkDefault pkgs.emacsUnstable-nox;
       extraPackages = epkgs: [
         # Auto-complete
         #        epkgs.company-lsp
