@@ -12,9 +12,11 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, emacs-overlay, home-manager, nixpkgs-review }: {
+  outputs = { self, nixpkgs, flake-utils, emacs-overlay, home-manager, nixpkgs-review }: {
     lib = {
       homeConfiguration = { configuration, username ? "rasmus", system ? "x86_64-linux", extraModules ? [ ] }:
         home-manager.lib.homeManagerConfiguration {
@@ -36,44 +38,10 @@
         };
     };
 
-    apps.x86_64-linux = {
-      # First run "wal ...", then "nix run .#copy-theme".
-      copy-theme = {
-        type = "app";
-        program = let prog = nixpkgs.legacyPackages.x86_64-linux.writeShellApplication {
-          name = "copy-theme";
-          text = ''
-            mkdir -p wal
-            if [[ -v 1 ]]; then
-              pushd "$1"
-              TARGET="$(pwd)"
-              popd
-            else
-              TARGET=$(pwd)/wal
-            fi
-            pushd ~/.cache/wal
-
-            cp colors{.json,.hs,.Xresources,-kitty.conf,-sway,-waybar.css} \
-               colors-wal-dmenu.h \
-               "$TARGET"
-
-            popd
-
-            pushd "$TARGET"
-
-            sed -i 's/"wallpaper": ".*"/"wallpaper": "None"/' colors.json
-            sed -i 's/wallpaper=".*"/wallpaper="None"/' colors.hs
-            sed -i '/set .wallpaper/d' colors-sway
-
-            popd
-          '';
-        };
-        in "${prog}/bin/copy-theme";
-      };
-    };
+    nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
 
     homeConfigurations = {
-      "rasmus@kalmiya" =  (self.lib.homeConfiguration {
+      "rasmus@kalmiya" = (self.lib.homeConfiguration {
         configuration = { ... }: {
           custom.hostname = "kalmiya";
           custom.wifiInterface = "wlp2s0";
@@ -84,7 +52,65 @@
         };
       });
     };
+  } // flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
+    apps = {
+      # First run "wal ...", then "nix run .#copy-theme".
+      copy-theme = {
+        type = "app";
+        program =
+          let
+            prog = nixpkgs.legacyPackages.${system}.writeShellApplication {
+              name = "copy-theme";
+              text = ''
+                mkdir -p wal
+                if [[ -v 1 ]]; then
+                  pushd "$1"
+                  TARGET="$(pwd)"
+                  popd
+                else
+                  TARGET=$(pwd)/wal
+                fi
+                pushd ~/.cache/wal
 
-    nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
-  };
+                cp colors{.json,.hs,.Xresources,-kitty.conf,-sway,-waybar.css} \
+                   colors-wal-dmenu.h \
+                   "$TARGET"
+
+                popd
+
+                pushd "$TARGET"
+
+                sed -i 's/"wallpaper": ".*"/"wallpaper": "None"/' colors.json
+                sed -i 's/wallpaper=".*"/wallpaper="None"/' colors.hs
+                sed -i '/set .wallpaper/d' colors-sway
+
+                popd
+              '';
+            };
+          in
+          "${prog}/bin/copy-theme";
+      };
+    };
+
+    checks = {
+      x11 = (self.lib.homeConfiguration {
+        inherit system;
+        configuration = {
+          profiles.graphical.x11.enable = true;
+          custom.hostname = "check";
+          custom.wifiInterface = "wl-test";
+        };
+      }).activationPackage;
+
+      wayland = (self.lib.homeConfiguration {
+        inherit system;
+        configuration = {
+          profiles.graphical.wayland.enable = true;
+          custom.hostname = "check";
+          custom.wifiInterface = "wl-test";
+        };
+      }).activationPackage;
+    };
+  }
+  );
 }
