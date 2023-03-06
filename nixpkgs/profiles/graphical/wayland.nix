@@ -9,11 +9,12 @@ let cfg = config.profiles.graphical.wayland;
     '';
 
     swaymsg = "${pkgs.sway}/bin/swaymsg";
+    jq = "${pkgs.jq}/bin/jq";
     sway-commands = {
       move-to-next-output = pkgs.writeScript "next-output" ''
         ${swaymsg} -t get_outputs \
-          | jq '.[(map(.focused) | index(true) + 1) % length].name' \
-          | xargs ${swaymsg} move workspace to
+          | ${jq} '.[(map(.focused) | index(true) + 1) % length].name' \
+          | ${pkgs.findutils}/bin/xargs ${swaymsg} move workspace to
       '';
     };
 
@@ -105,7 +106,11 @@ in
       { event = "lock"; command = "${lockCommand}"; }
     ];
     services.swayidle.timeouts = [
-      { timeout = 600; command = "swaymsg \"output * dpms off\""; resumeCommand = "swaymsg \"output * dpms on\""; }
+      {
+        timeout = 600;
+        command = "${swaymsg} \"output * dpms off\"";
+        resumeCommand = "${swaymsg} \"output * dpms on\"";
+      }
     ];
     services.kanshi = {
       enable = true;
