@@ -33,6 +33,18 @@
                 username = username;
                 homeDirectory = "/home/${username}";
               };
+              nix.registry.nixpkgs = {
+                from = {
+                  id = "nixpkgs";
+                  type = "indirect";
+                };
+                to = {
+                  inherit (self.inputs.nixpkgs) rev narHash lastModified;
+                  type = "github";
+                  owner = "NixOS";
+                  repo = "nixpkgs";
+                };
+              };
             }
           ] ++ extraModules;
         };
