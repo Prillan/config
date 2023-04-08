@@ -89,6 +89,7 @@ in {
         epkgs.haskell-mode
         epkgs.hledger-mode
         epkgs.jq-mode
+        epkgs.json-mode
         epkgs.lsp-haskell
         epkgs.lsp-java
         epkgs.lsp-metals
