@@ -69,7 +69,7 @@ in {
 
     programs.emacs = {
       enable = true;
-      package = mkDefault pkgs.emacsUnstable-nox;
+      package = mkDefault pkgs.emacs-unstable-nox;
       extraPackages = epkgs: [
         # Auto-complete
         #        epkgs.company-lsp

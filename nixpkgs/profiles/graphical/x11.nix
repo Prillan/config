@@ -16,7 +16,7 @@ in
       pkgs.swaylock-effects
     ];
 
-    programs.emacs.package = pkgs.emacsUnstable;
+    programs.emacs.package = pkgs.emacs-unstable;
     programs.urxvt = let
       inherit (builtins) concatStringsSep;
       fonts = [ "xft:DejaVu Sans Mono:size=10" "xft:Symbola" ];
