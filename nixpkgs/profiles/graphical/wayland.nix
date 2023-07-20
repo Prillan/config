@@ -33,7 +33,7 @@ in
     ];
 
     programs.emacs.package = pkgs.emacs-pgtk;
-    programs.mako.enable = true;
+    services.mako.enable = true;
     programs.kitty = {
       enable = true;
       extraConfig = readFile "${config.colors.wal-dir}/colors-kitty.conf";
