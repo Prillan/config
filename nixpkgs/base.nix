@@ -40,6 +40,12 @@ in {
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
 
+    nix = {
+      package = pkgs.nixStable;
+      settings.auto-optimise-store = true;
+      extraOptions = builtins.readFile ../nix.conf;
+    };
+
     nixpkgs.config = {
       allowUnfree = true;
       allowUnfreePredicate = (pkg: true);
