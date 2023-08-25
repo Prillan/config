@@ -19,9 +19,11 @@
 
   outputs = { self, nixpkgs, unstable, flake-utils, emacs-overlay, home-manager, nixpkgs-review }: {
     overlays = {
-      default = final: prev: {
-        josm = unstable.legacyPackages.${prev.system}.josm;
-      };
+      default = final: prev:
+        let pkgs = unstable.legacyPackages.${prev.system};
+        in {
+          inherit (pkgs) josm nix-zsh-completions;
+        };
     };
     lib = {
       homeConfiguration = { configuration, username ? "rasmus", system ? "x86_64-linux", extraModules ? [ ] }:
