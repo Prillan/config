@@ -8,6 +8,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
@@ -16,7 +17,12 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, emacs-overlay, home-manager, nixpkgs-review }: {
+  outputs = { self, nixpkgs, unstable, flake-utils, emacs-overlay, home-manager, nixpkgs-review }: {
+    overlays = {
+      default = final: prev: {
+        josm = unstable.legacyPackages.${prev.system}.josm;
+      };
+    };
     lib = {
       homeConfiguration = { configuration, username ? "rasmus", system ? "x86_64-linux", extraModules ? [ ] }:
         home-manager.lib.homeManagerConfiguration {
@@ -26,7 +32,10 @@
             configuration
             {
               home.packages = [ nixpkgs-review.packages.${system}.default ];
-              nixpkgs.overlays = [ emacs-overlay.overlay ];
+              nixpkgs.overlays = [
+                emacs-overlay.overlay
+                self.overlays.default
+              ];
             }
             {
               home = {
