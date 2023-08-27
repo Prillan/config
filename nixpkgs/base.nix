@@ -157,7 +157,8 @@ in {
         source ${pkgs.zsh-git-prompt}/share/zsh-git-prompt/zshrc.sh
       '';
       shellAliases = {
-        e = "emacsclient -c";
+        e = "emacsclient -c . &";
+        ec = "emacsclient -c";
       };
     };
   };
