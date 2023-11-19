@@ -92,6 +92,7 @@ in {
 
       # Tools
       pkgs.cachix
+      pkgs.csvtool
       pkgs.dive
       pkgs.graphviz
       pkgs.gopass
@@ -103,6 +104,7 @@ in {
       pkgs.python3
       pkgs.ripgrep
       pkgs.tree
+      pkgs.units
       pkgs.up
       pkgs.usbutils
 
