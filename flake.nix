@@ -103,6 +103,12 @@
         };
       });
     };
+
+
+    templates.shell = {
+      path = ./templates/shell;
+      description = "A quick ad-hoc-ish shell";
+    };
   } // flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
     apps = {
       # First run "wal ...", then "nix run .#copy-theme".
