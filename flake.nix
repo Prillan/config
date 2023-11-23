@@ -44,18 +44,46 @@
                 username = username;
                 homeDirectory = "/home/${username}";
               };
-              nix.registry.nixpkgs = {
-                from = {
-                  id = "nixpkgs";
-                  type = "indirect";
+              nix.registry =
+                let
+                  reg = { id, input, type, owner, repo }: {
+                    from = {
+                      inherit id;
+                      type = "indirect";
+                    };
+                    to = {
+                      inherit (input) rev narHash lastModified;
+                      inherit type owner repo;
+                    };
+                  };
+                in
+                {
+                  nixpkgs = reg {
+                    id = "nixpkgs";
+                    input = self.inputs.nixpkgs;
+                    type = "github";
+                    owner = "NixOS";
+                    repo = "nixpkgs";
+                  };
+                  unstable = reg {
+                    id = "unstable";
+                    input = self.inputs.unstable;
+                    type = "github";
+                    owner = "NixOS";
+                    repo = "nixpkgs";
+                  };
+                  config = {
+                    from = {
+                      id = "config";
+                      type = "indirect";
+                    };
+                    to = {
+                      type = "github";
+                      owner = "Prillan";
+                      repo = "config";
+                    };
+                  };
                 };
-                to = {
-                  inherit (self.inputs.nixpkgs) rev narHash lastModified;
-                  type = "github";
-                  owner = "NixOS";
-                  repo = "nixpkgs";
-                };
-              };
             }
           ] ++ extraModules;
         };
