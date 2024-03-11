@@ -91,7 +91,7 @@ in {
       pkgs.pandoc
 
       # Tools
-      pkgs.cachix
+      # pkgs.cachix
       pkgs.csvtool
       pkgs.dive
       pkgs.graphviz
