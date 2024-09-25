@@ -36,7 +36,7 @@ in {
       pkgs.haskell-language-server
 
       # Nix
-      pkgs.nixfmt
+      pkgs.nixfmt-rfc-style
       pkgs.nixpkgs-fmt
 
       ## Rust
