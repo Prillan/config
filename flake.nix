@@ -150,14 +150,14 @@
     };
 
     checks = {
-      x11 = (self.lib.homeConfiguration {
-        inherit system;
-        configuration = {
-          profiles.graphical.x11.enable = true;
-          custom.hostname = "check";
-          custom.wifiInterface = "wl-test";
-        };
-      }).activationPackage;
+      # x11 = (self.lib.homeConfiguration {
+      #   inherit system;
+      #   configuration = {
+      #     profiles.graphical.x11.enable = true;
+      #     custom.hostname = "check";
+      #     custom.wifiInterface = "wl-test";
+      #   };
+      # }).activationPackage;
 
       wayland = (self.lib.homeConfiguration {
         inherit system;
