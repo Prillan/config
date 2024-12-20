@@ -48,6 +48,7 @@ in {
 
       pkgs.binutils
       pkgs.git-crypt
+      pkgs.hyperfine
       pkgs.kafkacat
       pkgs.ncdu
       pkgs.redis
