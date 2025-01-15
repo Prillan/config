@@ -103,6 +103,7 @@ in {
         epkgs.lsp-mode
         epkgs.lsp-ui
         epkgs.markdown-mode
+        epkgs.purescript-mode
 
         epkgs.nix-mode
         epkgs.reformatter

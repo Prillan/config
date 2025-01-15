@@ -7,6 +7,8 @@ let # TODO: Prettify
   borg-user = "19194";
 
   borg-exclude = pkgs.writeText "borg-exclude" ''
+    ${config.home.homeDirectory}/.android
+    ${config.home.homeDirectory}/Android
     ${config.home.homeDirectory}/Downloads
     ${config.home.homeDirectory}/tmp
     sh:${config.home.homeDirectory}/**/.stack-work
