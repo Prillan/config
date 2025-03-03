@@ -111,7 +111,7 @@ in {
       # Fonts
       pkgs.carlito
       pkgs.noto-fonts
-      pkgs.noto-fonts-cjk
+      pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-emoji
       pkgs.roboto
       pkgs.symbola
