@@ -49,7 +49,7 @@ in {
       pkgs.binutils
       pkgs.git-crypt
       pkgs.hyperfine
-      pkgs.kafkacat
+      pkgs.kcat
       pkgs.ncdu
       pkgs.redis
     ];
@@ -71,6 +71,12 @@ in {
     programs.emacs = {
       enable = true;
       package = mkDefault pkgs.emacs-unstable-nox;
+      overrides = self: super: {
+        # TODO: Remove when upgrading to 25.05 (or nixos-unstable)
+        dap-mode = super.dap-mode.overrideAttrs (old: {
+          preBuild = lib.replaceStrings ["rm --verbose dapui.el"] [""] old.preBuild;
+        });
+      };
       extraPackages = epkgs: [
         # Auto-complete
         #        epkgs.company-lsp
