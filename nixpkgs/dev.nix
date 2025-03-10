@@ -79,7 +79,7 @@ in {
       };
       extraPackages = epkgs: [
         # Auto-complete
-        #        epkgs.company-lsp
+        epkgs.company-box
         epkgs.flycheck
 
         # Searching

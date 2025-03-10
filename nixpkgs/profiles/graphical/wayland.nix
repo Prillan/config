@@ -32,7 +32,7 @@ in
       grimshot
     ];
 
-    programs.emacs.package = pkgs.emacs-pgtk;
+    programs.emacs.package = pkgs.emacs-git-pgtk;
     services.mako.enable = true;
     programs.kitty = {
       enable = true;
