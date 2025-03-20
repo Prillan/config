@@ -136,7 +136,7 @@ in
               ''
                 set -x
                 echo "$(date): " '${source} -> ${target}'
-                rsync -e "${ssh}" -vrz ${filterOpt} '${source}' '${target}'
+                rsync -e "${ssh}" -vrzt ${filterOpt} '${source}' '${target}'
               '';
             serviceConfig = {
               Type = "exec";
