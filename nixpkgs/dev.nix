@@ -108,7 +108,7 @@ in {
         epkgs.nix-mode
         epkgs.reformatter
 
-        epkgs.rustic
+        # epkgs.rustic
         epkgs.scala-mode
         epkgs.terraform-mode
         epkgs.typescript-mode
