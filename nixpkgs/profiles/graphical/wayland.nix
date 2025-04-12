@@ -13,7 +13,7 @@ let cfg = config.profiles.graphical.wayland;
     sway-commands = {
       move-to-next-output = pkgs.writeScript "next-output" ''
         ${swaymsg} -t get_outputs \
-          | ${jq} '.[(map(.focused) | index(true) + 1) % length].name' \
+          | ${jq} '[.[] | select(.active)] as $ws | $ws | .[(. | map(.focused) | index(true) + 1) % length].name' \
           | ${pkgs.findutils}/bin/xargs ${swaymsg} move workspace to
       '';
     };
