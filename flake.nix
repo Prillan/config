@@ -26,74 +26,76 @@
         };
     };
     lib = {
+      homeConfigurationBase = { system ? "x86_64-linux" }: {
+        imports = [
+          ./nixpkgs/home.nix
+        ];
+        nixpkgs.overlays = [
+          emacs-overlay.overlay
+          self.overlays.default
+        ];
+        home.packages = [ nixpkgs-review.packages.${system}.default ];
+
+        nix.registry =
+          let
+            reg = { id, input, type, owner, repo }: {
+              from = {
+                inherit id;
+                type = "indirect";
+              };
+              to = {
+                inherit (input) rev narHash lastModified;
+                inherit type owner repo;
+              };
+            };
+          in
+            {
+              nixpkgs = reg {
+                id = "nixpkgs";
+                input = self.inputs.nixpkgs;
+                type = "github";
+                owner = "NixOS";
+                repo = "nixpkgs";
+              };
+              unstable = reg {
+                id = "unstable";
+                input = self.inputs.unstable;
+                type = "github";
+                owner = "NixOS";
+                repo = "nixpkgs";
+              };
+              config = {
+                from = {
+                  id = "config";
+                  type = "indirect";
+                };
+                to = {
+                  type = "github";
+                  owner = "Prillan";
+                  repo = "config";
+                };
+              };
+            };
+      };
       homeConfiguration = { configuration, username ? "rasmus", system ? "x86_64-linux", extraModules ? [ ] }:
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
           modules = [
-            ./nixpkgs/home.nix
+            (self.lib.homeConfigurationBase { inherit system; })
             configuration
-            {
-              home.packages = [ nixpkgs-review.packages.${system}.default ];
-              nixpkgs.overlays = [
-                emacs-overlay.overlay
-                self.overlays.default
-              ];
-            }
             {
               home = {
                 username = username;
                 homeDirectory = "/home/${username}";
               };
-              nix.registry =
-                let
-                  reg = { id, input, type, owner, repo }: {
-                    from = {
-                      inherit id;
-                      type = "indirect";
-                    };
-                    to = {
-                      inherit (input) rev narHash lastModified;
-                      inherit type owner repo;
-                    };
-                  };
-                in
-                {
-                  nixpkgs = reg {
-                    id = "nixpkgs";
-                    input = self.inputs.nixpkgs;
-                    type = "github";
-                    owner = "NixOS";
-                    repo = "nixpkgs";
-                  };
-                  unstable = reg {
-                    id = "unstable";
-                    input = self.inputs.unstable;
-                    type = "github";
-                    owner = "NixOS";
-                    repo = "nixpkgs";
-                  };
-                  config = {
-                    from = {
-                      id = "config";
-                      type = "indirect";
-                    };
-                    to = {
-                      type = "github";
-                      owner = "Prillan";
-                      repo = "config";
-                    };
-                  };
-                };
             }
           ] ++ extraModules;
         };
-    };
-
-    nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
-
-    homeConfigurations = {
-      "rasmus@kalmiya" = (self.lib.homeConfiguration {
-        configuration = { ... }: {
+      homeConfigurations = {
+        "rasmus@kalmiya" = { system }: { ... }: {
+          imports = [
+            (self.lib.homeConfigurationBase { inherit system; })
+          ];
           custom.hostname = "kalmiya";
           custom.wifiInterface = "wlp2s0";
           profiles.fluff.enable = true;
@@ -101,9 +103,10 @@
           profiles.mapping.enable = true;
           borg.enable = true;
         };
-      });
+      };
     };
 
+    nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
 
     templates.shell = {
       path = ./templates/shell;

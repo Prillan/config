@@ -41,7 +41,7 @@ in {
     programs.home-manager.enable = true;
 
     nix = {
-      package = pkgs.nixStable;
+      package = lib.mkDefault pkgs.nixStable;
       settings = {
         auto-optimise-store = true;
         experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
