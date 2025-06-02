@@ -3,8 +3,8 @@ with builtins;
 with lib;
 
 let # TODO: Prettify
-  borg-host = "ch-s012.rsync.net";
-  borg-user = "19194";
+  borg-host = "zh5437.rsync.net";
+  borg-user = "zh5437";
 
   borg-exclude = pkgs.writeText "borg-exclude" ''
     ${config.home.homeDirectory}/.android
@@ -40,6 +40,7 @@ let # TODO: Prettify
     ARCHIVE="$(date --iso-8601=minutes | cut -d'+' -f 1)"
 
     ${pkgs.borgbackup}/bin/borg create \
+         --remote-path=borg14 \
          --exclude-from ${borg-exclude} \
          --stats \
          --progress \
