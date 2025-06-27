@@ -38,6 +38,7 @@ in {
       # Nix
       pkgs.nixfmt-rfc-style
       pkgs.nixpkgs-fmt
+      pkgs.nixpkgs-review
 
       ## Rust
       pkgs.rust-analyzer
