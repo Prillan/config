@@ -28,9 +28,6 @@ in {
     programs.jq.enable = true;
 
     home.packages = [
-      # Direnv
-      pkgs.direnv
-
       # Haskell
       pkgs.cabal-install
       pkgs.haskell-language-server
@@ -65,8 +62,13 @@ in {
         '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
 
       ${base}
-      ;; Lines from dev.dotEmacs.extraLines
+      ;; Begin lines from dev.dotEmacs.extraLines ;;
       ${extra}
+      ;; End lines from dev.dotEmacs.extraLines   ;;
+
+      ;; Supposedly has to be at the end of the file
+      (use-package envrc
+        :hook (after-init . envrc-global-mode))
     '';
 
     programs.emacs = {
@@ -74,7 +76,6 @@ in {
       package = mkDefault pkgs.emacs-unstable-nox;
       extraPackages = epkgs: [
         # Auto-complete
-        epkgs.company-box
         epkgs.flycheck
 
         # Searching
@@ -103,7 +104,7 @@ in {
         epkgs.nix-mode
         epkgs.reformatter
 
-        # epkgs.rustic
+        epkgs.rust-mode
         epkgs.scala-mode
         epkgs.terraform-mode
         epkgs.typescript-mode
@@ -121,7 +122,7 @@ in {
         epkgs.forge
 
         # Projects
-        epkgs.direnv
+        epkgs.envrc
         epkgs.projectile
         epkgs.projectile-ripgrep
 
@@ -142,6 +143,12 @@ in {
         epkgs.string-inflection
         epkgs.use-package
       ];
+    };
+
+    programs.direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
     };
 
     programs.git = {

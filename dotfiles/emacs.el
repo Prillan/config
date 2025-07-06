@@ -60,10 +60,6 @@
     :load-path (-piper-load-path)
     :bind ("C-c C-|" . piper))
 
-(use-package direnv
-  :config
-  (direnv-mode))
-
 (use-package koka-mode
   :load-path (-koka-load-path)
   :mode "\\.kk\\'")
@@ -223,9 +219,6 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package jq-mode
   :mode "\\.jq\\'")
 
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-
 (require 'lsp)
 (require 'lsp-haskell)
 
@@ -233,6 +226,7 @@ Saves to a temp file and puts the filename in the kill ring."
   :hook
   (scala-mode . lsp)
   (haskell-mode . lsp)
+  (rust-mode . lsp)
   (lsp-mode . lsp-lens-mode)
   :config
   (setq lsp-prefer-flymake nil)

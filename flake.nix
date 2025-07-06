@@ -111,6 +111,7 @@
                   };
                   custom.hostname = "kalmiya";
                   custom.wifiInterface = "wlp2s0";
+                  nix.settings.experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
                 }
               ];
             }

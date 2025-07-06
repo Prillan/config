@@ -44,7 +44,7 @@ in {
       package = lib.mkDefault pkgs.nixStable;
       settings = {
         auto-optimise-store = true;
-        experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
+        experimental-features = [ "nix-command" "flakes" ];
       };
       extraOptions = builtins.readFile ../nix.conf;
     };
