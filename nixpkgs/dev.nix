@@ -37,6 +37,9 @@ in {
       pkgs.nixpkgs-fmt
       pkgs.nixpkgs-review
 
+      # Python
+      pkgs.pyright
+
       ## Rust
       pkgs.rust-analyzer
 
@@ -97,6 +100,7 @@ in {
         epkgs.lsp-java
         epkgs.lsp-metals
         epkgs.lsp-mode
+        epkgs.lsp-pyright
         epkgs.lsp-ui
         epkgs.markdown-mode
         epkgs.purescript-mode

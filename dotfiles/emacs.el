@@ -233,6 +233,13 @@ Saves to a temp file and puts the filename in the kill ring."
   (setq lsp-keymap-prefix "§")
   (define-key lsp-mode-map (kbd "§") lsp-command-map))
 
+(use-package lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
 (use-package hledger-mode
   :mode ("\\.journal\\'" "\\.hledger\\'"))
 
