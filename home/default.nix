@@ -5,7 +5,7 @@
     ./backup
     ./colors.nix
     ./ctf.nix
-    ./dev.nix
+    ./dev
     ./media.nix
     ./profiles
   ];

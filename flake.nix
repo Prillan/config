@@ -37,7 +37,7 @@
         homeModules = {
           base = {
             imports = [
-              ./nixpkgs/home.nix
+              ./home
             ];
             nixpkgs.overlays = [
               emacs-overlay.overlay

@@ -2,11 +2,7 @@
 with lib;
 let
   cfg = config.dev;
-  emacsPiper = pkgs.callPackage (import ./pkgs/piper.nix) { };
-  kokaMode = "${pkgs.koka.src}/support/emacs/";
-
-  # TODO: Fix
-  # nix-haskell-hls = import (fetchTarball https://github.com/shajra/nix-haskell-hls/archive/refs/heads/main.tar.gz) {};
+  emacsPiper = pkgs.callPackage (import ../../pkgs/piper.nix) { };
 in {
   options.dev = {
     dotEmacs = mkOption {
@@ -28,25 +24,6 @@ in {
     programs.jq.enable = true;
 
     home.packages = [
-      # Haskell
-      pkgs.cabal-install
-      pkgs.haskell-language-server
-
-      # Nix
-      pkgs.nixfmt-rfc-style
-      pkgs.nixpkgs-fmt
-      pkgs.nixpkgs-review
-
-      # Python
-      pkgs.pyright
-
-      ## Rust
-      pkgs.rust-analyzer
-
-      ## Scala
-      pkgs.lombok
-      pkgs.metals
-
       pkgs.binutils
       pkgs.git-crypt
       pkgs.hyperfine
@@ -56,13 +33,10 @@ in {
     ];
 
     home.file.".emacs".text = let
-      base = builtins.readFile ./../dotfiles/emacs.el;
+      base = builtins.readFile ../../dotfiles/emacs.el;
       extra = cfg.dotEmacs.extraLines;
     in ''
       (setq -piper-load-path "${emacsPiper}")
-      (setq -koka-load-path "${kokaMode}")
-      (setq lsp-java-vmargs
-        '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
 
       ${base}
       ;; Begin lines from dev.dotEmacs.extraLines ;;
@@ -87,34 +61,6 @@ in {
 
         # Latex
         epkgs.auctex
-
-        # Modes
-        epkgs.company-terraform
-        epkgs.dockerfile-mode
-        epkgs.groovy-mode
-        epkgs.haskell-mode
-        epkgs.hledger-mode
-        epkgs.jq-mode
-        epkgs.json-mode
-        epkgs.lsp-haskell
-        epkgs.lsp-java
-        epkgs.lsp-metals
-        epkgs.lsp-mode
-        epkgs.lsp-pyright
-        epkgs.lsp-ui
-        epkgs.markdown-mode
-        epkgs.purescript-mode
-
-        epkgs.nix-mode
-        epkgs.reformatter
-
-        epkgs.rust-mode
-        epkgs.scala-mode
-        epkgs.terraform-mode
-        epkgs.typescript-mode
-        epkgs.yaml-mode
-        epkgs.yasnippet
-        epkgs.yasnippet-snippets
 
         # Navigation
         epkgs.dumb-jump
@@ -165,8 +111,6 @@ in {
         signByDefault = true;
       };
     };
-
-    programs.sbt.enable = true;
 
     services.emacs.enable = true;
     services.emacs.socketActivation.enable = true;
