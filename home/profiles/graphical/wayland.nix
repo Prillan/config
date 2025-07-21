@@ -30,6 +30,7 @@ in
 
     home.packages = [
       grimshot
+      pkgs.adwaita-icon-theme # for cursor icons
     ];
 
     programs.emacs.package = pkgs.emacs-git-pgtk;
