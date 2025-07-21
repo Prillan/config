@@ -129,10 +129,13 @@ in {
 
     programs.autojump.enable = true;
     programs.htop.enable = true;
-    # programs.noti = {
-    #   enable = true;
-    #   settings = { telegram = import ./semi-secret/telegram.nix; };
-    # };
+
+    custom-programs.noti = {
+      enable = true;
+      telegram.enable = true;
+      telegram.chatId = "207714987";
+      telegram.tokenFile = config.age.secrets.telegram-token.path;
+    };
     programs.ssh = {
       enable = true;
       compression = true;

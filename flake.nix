@@ -16,6 +16,9 @@
 
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
+
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.darwin.follows = "";
   };
 
   outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
@@ -37,6 +40,8 @@
         homeModules = {
           base = {
             imports = [
+              inputs.agenix.homeManagerModules.default
+              ./home-modules/noti
               ./home
             ];
             nixpkgs.overlays = [
