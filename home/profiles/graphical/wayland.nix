@@ -80,6 +80,9 @@ in
         ''
         bindsym --locked XF86MonBrightnessDown exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-
         bindsym --locked XF86MonBrightnessUp exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+
+
+        bindswitch --reload --locked lid:on output eDP-1 disable
+        bindswitch --reload --locked lid:off output eDP-1 enable
         ''
       ];
       extraSessionCommands = ''
@@ -126,12 +129,15 @@ in
         { profile.name = "home-docked";
           profile.outputs = [
             {
-              criteria = "eDP-1";
-              position = "2560,0";
+              criteria = "Samsung Electric Company LS27A600U H4ZRC01423";
+              position = "1920,0";
             }
             {
-              criteria = "Samsung Electric Company LS27A600U H4ZRC01423";
+              criteria = "ASUSTek COMPUTER INC VG259 L6LMQS191984";
               position = "0,0";
+            }
+            {
+              criteria = "eDP-1";
             }
           ];
         }
