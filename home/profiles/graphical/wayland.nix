@@ -131,10 +131,14 @@ in
             {
               criteria = "Samsung Electric Company LS27A600U H4ZRC01423";
               position = "1920,0";
+              mode = "2560x1440";
+              status = "enable";
             }
             {
               criteria = "ASUSTek COMPUTER INC VG259 L6LMQS191984";
               position = "0,0";
+              mode = "1920x1080";
+              status = "enable";
             }
             {
               criteria = "eDP-1";

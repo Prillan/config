@@ -18,6 +18,7 @@ in {
     scala.enabled = mkEnableOptionDefaultTrue "scala";
     koka.enabled = mkEnableOptionDefaultTrue "koka";
     java.enabled = mkEnableOptionDefaultTrue "java";
+    purescript.enabled = mkEnableOptionDefaultTrue "purescript";
   };
 
   config = mkMerge [
@@ -101,6 +102,25 @@ in {
         dev.dotEmacs.extraLines = ''
           (setq lsp-java-vmargs
             '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:${pkgs.lombok}/share/java/lombok.jar"))
+        '';
+      })
+    # Purescript
+    (mkIf cfg.purescript.enabled
+      {
+        home.packages = [
+          pkgs.purescript
+          pkgs.nodePackages.purescript-language-server
+        ];
+        dev.dotEmacs.extraLines = ''
+          ;; FROM https://github.com/purescript-emacs/purescript-mode?tab=readme-ov-file#basic-configuration
+          (use-package purescript-mode
+            :defer t
+            :config
+            (defun myhook-purescript-mode ()
+              (turn-on-purescript-indentation)
+              (add-hook 'before-save-hook #'purescript-sort-imports nil t))
+            (add-hook 'purescript-mode-hook #'myhook-purescript-mode)
+            :hook (purescript-mode . lsp))
         '';
       })
     # # Rust

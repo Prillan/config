@@ -43,4 +43,5 @@
   ".projectile"
   ".log"
   ".bsp"
+  ".direnv"
 ]
