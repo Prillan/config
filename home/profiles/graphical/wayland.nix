@@ -30,8 +30,17 @@ in
 
     home.packages = [
       grimshot
-      pkgs.adwaita-icon-theme # for cursor icons
     ];
+    home.pointerCursor = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+      size = 24;
+      x11.enable = true;
+      x11.defaultCursor = "Adwaita";
+      sway.enable = true;
+    };
+    # TODO: Remove after 25.11: https://github.com/nix-community/home-manager/pull/7176
+    gtk.cursorTheme.size = config.home.pointerCursor.size;
 
     programs.emacs.package = pkgs.emacs-git-pgtk;
     services.mako.enable = true;
