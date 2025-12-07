@@ -101,6 +101,35 @@ in {
       enableZshIntegration = true;
       nix-direnv.enable = true;
     };
+    xdg.configFile."direnv/lib/layout-uv.sh".source = pkgs.writeScript "layout-uv.sh" ''
+# From https://github.com/direnv/direnv/wiki/Python#uv
+layout_uv() {
+  if [[ -d ".venv" ]]; then
+    VIRTUAL_ENV="$(pwd)/.venv"
+  fi
+
+  if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
+    if [[ ! -f "pyproject.toml" ]]; then
+      log_status "No uv project exists. Executing \`uv init\` to create one."
+      ${pkgs.uv}/bin/uv init --no-readme
+      rm main.py
+      ${pkgs.uv}/bin/uv venv
+    else
+      uv sync
+    fi
+    VIRTUAL_ENV="$(pwd)/.venv"
+  fi
+
+  PATH_add ${pkgs.uv}/bin
+  if [ -d ".venv/bin" ]; then
+    PATH_add .venv/bin
+  elif [ -d ".venv/Scripts" ]; then
+    PATH_add .venv/Scripts
+  fi
+  export UV_ACTIVE=1 # or VENV_ACTIVE=1
+  export VIRTUAL_ENV
+}
+    '';
 
     programs.git = {
       enable = true;
