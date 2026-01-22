@@ -2,17 +2,6 @@
 with lib;
 let
   cfg = config.custom;
-  zsh-custom-path = let
-    patch-script = ''
-      function git_prompt_info() { git_super_status }
-    '';
-    zsh-git-prompt-patch = pkgs.writeTextFile rec {
-      name = "git-prompt-patch";
-      text = patch-script;
-      destination = "/custom/${config.home.username}.zsh";
-      executable = true;
-    };
-  in zsh-git-prompt-patch + "/custom";
 in {
   options = {
     custom = {
@@ -41,7 +30,7 @@ in {
     programs.home-manager.enable = true;
 
     nix = {
-      package = lib.mkDefault pkgs.nixStable;
+      package = lib.mkDefault pkgs.nixVersions.stable;
       settings = {
         auto-optimise-store = true;
         experimental-features = [ "nix-command" "flakes" ];
@@ -77,7 +66,7 @@ in {
 
       # Writing(?)
       pkgs.ispell
-      (pkgs.hunspellWithDicts (with pkgs.hunspellDicts; [ sv_SE en_US ]))
+      (pkgs.hunspell.withDicts (d: [ d.sv_SE d.en_US ]))
       (pkgs.texlive.combine {
         inherit (pkgs.texlive) scheme-medium collection-langeuropean;
       })
@@ -112,7 +101,7 @@ in {
       pkgs.carlito
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk-sans
-      pkgs.noto-fonts-emoji
+      pkgs.noto-fonts-color-emoji
       pkgs.roboto
       pkgs.symbola
     ] ++ (if cfg.onNixOS then [ pkgs.xclip ] else [ ]);
@@ -138,9 +127,11 @@ in {
     };
     programs.ssh = {
       enable = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "60m";
+      matchBlocks."*" = {
+        compression = true;
+        controlMaster = "auto";
+        controlPersist = "60m";
+      };
     };
 
     programs.zsh = {
@@ -150,16 +141,12 @@ in {
         enable = true;
         theme = "candy";
         plugins = [ "autojump" ];
-        custom = zsh-custom-path;
       };
       initContent = ''
         unset SSH_AGENT_PID
         if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
             export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
         fi
-
-        GIT_PROMPT_EXECUTABLE="haskell"
-        source ${pkgs.zsh-git-prompt}/share/zsh-git-prompt/zshrc.sh
       '';
       shellAliases = {
         e = "emacsclient -c . &";

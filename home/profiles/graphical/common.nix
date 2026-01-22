@@ -48,7 +48,7 @@ in
       # "Apps"
       pkgs.discord
       pkgs.evince
-      pkgs.tdesktop
+      pkgs.telegram-desktop
       pkgs.thunderbird
 
       # Fonts

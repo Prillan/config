@@ -58,7 +58,7 @@ in {
 
         # Searching
         epkgs.ag
-        epkgs.helm-ag
+        epkgs.helm-rg
 
         # Latex
         epkgs.auctex
@@ -134,8 +134,8 @@ layout_uv() {
     programs.git = {
       enable = true;
       ignores = import ./gitignores.nix;
-      userEmail = "rasmus@precenth.eu";
-      userName = "Rasmus Précenth";
+      settings.user.email = "rasmus@precenth.eu";
+      settings.user.name = "Rasmus Précenth";
       signing = {
         key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7";
         signByDefault = true;
