@@ -8,6 +8,5 @@
     ./dev
     ./media.nix
     ./profiles
-    ./secrets.nix
   ];
 }

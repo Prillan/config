@@ -80,12 +80,11 @@ in {
       pkgs.pandoc
 
       # Tools
-      # pkgs.cachix
+      pkgs.agenix
       pkgs.csvtool
       pkgs.dive
       pkgs.graphviz
       pkgs.gopass
-      # pkgs.haskellPackages.steeloverseer # BROKEN
       pkgs.moreutils
       pkgs.nix-tree
       pkgs.ncdu
@@ -119,6 +118,7 @@ in {
     programs.autojump.enable = true;
     programs.htop.enable = true;
 
+    age.secrets.telegram-token.file = ../secrets/telegram-token.age;
     custom-programs.noti = {
       enable = true;
       telegram.enable = true;

@@ -46,6 +46,7 @@
             ];
             nixpkgs.overlays = [
               emacs-overlay.overlay
+              inputs.agenix.overlays.default
               self.overlays.default
             ];
 
