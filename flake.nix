@@ -19,6 +19,7 @@
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.darwin.follows = "";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
