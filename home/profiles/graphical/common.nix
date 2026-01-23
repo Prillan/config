@@ -52,10 +52,16 @@ in
       pkgs.thunderbird
 
       # Fonts
+      pkgs.carlito
+      pkgs.font-awesome
+      pkgs.jetbrains-mono
+      pkgs.noto-fonts
+      pkgs.noto-fonts-cjk-sans
+      pkgs.noto-fonts-color-emoji
+      pkgs.roboto
+      pkgs.symbola
       pkgs.terminus_font
       pkgs.terminus_font_ttf
-      pkgs.jetbrains-mono
-      pkgs.font-awesome
     ];
 
     programs.feh.enable = true;

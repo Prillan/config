@@ -59,9 +59,6 @@ in {
         epkgs.ag
         epkgs.helm-rg
 
-        # Latex
-        epkgs.auctex
-
         # Navigation
         epkgs.dumb-jump
         epkgs.multiple-cursors

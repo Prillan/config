@@ -95,11 +95,12 @@
 
           rasmus-graphical-user = {
             imports = [ self.homeModules.base ];
+            borg.enable = true;
             profiles.dev.enable = true;
             profiles.fluff.enable = true;
             profiles.graphical.wayland.enable = true;
             profiles.mapping.enable = true;
-            borg.enable = true;
+            profiles.writing.enable = true;
             programs.home-manager.enable = true;
           };
         };

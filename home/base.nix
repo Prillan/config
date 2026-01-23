@@ -67,9 +67,6 @@ in {
       # Writing(?)
       pkgs.ispell
       (pkgs.hunspell.withDicts (d: [ d.sv_SE d.en_US ]))
-      (pkgs.texlive.combine {
-        inherit (pkgs.texlive) scheme-medium collection-langeuropean;
-      })
 
       # Compression
       pkgs.zstd
@@ -95,14 +92,6 @@ in {
       pkgs.units
       pkgs.up
       pkgs.usbutils
-
-      # Fonts
-      pkgs.carlito
-      pkgs.noto-fonts
-      pkgs.noto-fonts-cjk-sans
-      pkgs.noto-fonts-color-emoji
-      pkgs.roboto
-      pkgs.symbola
     ] ++ (if cfg.onNixOS then [ pkgs.xclip ] else [ ]);
 
     home.sessionVariables = {
