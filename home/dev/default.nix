@@ -4,7 +4,6 @@ let
   cfg = config.dev;
   emacsPiper = pkgs.callPackage (import ../../pkgs/piper.nix) { };
 in {
-  imports = [ ./langs ];
   options.dev = {
     dotEmacs = mkOption {
       description = "submodule example";

@@ -1,4 +1,8 @@
-{ ... }:
 {
-  imports = [ ./fluff.nix ./graphical.nix ./mapping.nix ];
+  imports = [
+    ./dev.nix
+    ./fluff.nix
+    ./graphical.nix
+    ./mapping.nix
+  ];
 }

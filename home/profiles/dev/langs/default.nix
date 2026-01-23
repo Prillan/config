@@ -1,24 +1,17 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  cfg = config.dev.langs;
-  mkEnableOptionDefaultTrue = name:
-    mkOption {
-      default = true;
-      example = true;
-      description = "Whether to enable ${name}.";
-      type = lib.types.bool;
-    };
+  cfg = config.profiles.dev.langs;
 in {
-  options.dev.langs = {
-    python.enabled = mkEnableOptionDefaultTrue "python";
-    haskell.enabled = mkEnableOptionDefaultTrue "haskell";
-    rust.enabled = mkEnableOptionDefaultTrue "rust";
-    nix.enabled = mkEnableOptionDefaultTrue "nix";
-    scala.enabled = mkEnableOptionDefaultTrue "scala";
-    koka.enabled = mkEnableOptionDefaultTrue "koka";
-    java.enabled = mkEnableOptionDefaultTrue "java";
-    purescript.enabled = mkEnableOptionDefaultTrue "purescript";
+  options.profiles.dev.langs = {
+    python.enabled = mkEnableOption "python";
+    haskell.enabled = mkEnableOption "haskell";
+    rust.enabled = mkEnableOption "rust";
+    nix.enabled = mkEnableOption "nix";
+    scala.enabled = mkEnableOption "scala";
+    koka.enabled = mkEnableOption "koka";
+    java.enabled = mkEnableOption "java";
+    purescript.enabled = mkEnableOption "purescript";
   };
 
   config = mkMerge [
