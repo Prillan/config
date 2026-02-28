@@ -81,6 +81,9 @@ in {
           ];
           dev.dotEmacs.extraLines = ''
             (setq -koka-load-path "${kokaMode}")
+            (use-package koka-mode
+                :load-path (-koka-load-path)
+                :mode "\\.kk\\'")
           '';
         }))
     # Java

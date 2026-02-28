@@ -60,10 +60,6 @@
     :load-path (-piper-load-path)
     :bind ("C-c C-|" . piper))
 
-(use-package koka-mode
-  :load-path (-koka-load-path)
-  :mode "\\.kk\\'")
-
 (require 'po)
 (require 'po-mode)
 
