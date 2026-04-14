@@ -133,6 +133,11 @@ Saves to a temp file and puts the filename in the kill ring."
      tab-mark
      newline-mark)))
 
+(use-package ripgrep
+  :ensure t
+  :custom
+  (ripgrep-arguments '("-M" "300" "--max-columns-preview")))
+
 (use-package yasnippet
   :defer 1
   :commands
