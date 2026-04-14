@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (setq custom-file (expand-file-name "~/longtemp/custom.el"))
 (load custom-file)
 
