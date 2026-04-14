@@ -7,7 +7,7 @@ in
 {
   imports = [ ./dev/langs ];
   options.profiles.dev = {
-    enable = mkEnableOption "mapping (OSM) applications";
+    enable = mkEnableOption "development tools (programming languages, etc.)";
   };
 
   config = mkIf cfg.enable {
