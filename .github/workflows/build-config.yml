@@ -33,4 +33,4 @@ jobs:
           extraPullNames: nix-community
       - name: Build config
         run: >
-          cachix watch-exec rprecenth nix -- run github:Mic92/nix-fast-build -- --no-nom --skip-cached --flake .#homeConfigurations."rasmus@kalmiya".activationPackage
+          cachix watch-exec rprecenth nix -- run github:Mic92/nix-fast-build -- --no-nom --skip-cached --flake .#homeConfigurations.test.activationPackage

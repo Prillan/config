@@ -2,7 +2,8 @@
 with lib;
 let
   cfg = config.profiles.dev.langs;
-in {
+in
+{
   options.profiles.dev.langs = {
     python.enabled = mkEnableOption "python";
     haskell.enabled = mkEnableOption "haskell";
@@ -12,6 +13,16 @@ in {
     koka.enabled = mkEnableOption "koka";
     java.enabled = mkEnableOption "java";
     purescript.enabled = mkEnableOption "purescript";
+    erlang.enabled = mkEnableOption "erlang";
+    erlang.beamPackages = mkOption {
+      default = pkgs.beam28Packages;
+      type = types.lazyAttrsOf types.package;
+    };
+    elixir.enabled = mkEnableOption "elixir";
+    elixir.beamPackages = mkOption {
+      default = cfg.erlang.beamPackages;
+      type = types.lazyAttrsOf types.package;
+    };
   };
 
   config = mkMerge [
@@ -119,6 +130,41 @@ in {
             :hook (purescript-mode . lsp))
         '';
       })
+    # Erlang
+    (mkIf cfg.erlang.enabled (
+      let beamPackages = cfg.erlang.beamPackages;
+      in
+      {
+        home.packages = [
+          pkgs.erlang-language-platform
+          beamPackages.erlang
+        ];
+        programs.emacs.extraPackages = epkgs: [
+          epkgs.erlang
+        ];
+        dev.dotEmacs.extraLines = ''
+          (add-hook 'erlang-mode-hook #'lsp)
+        '';
+      }
+    ))
+    # Elixir
+    (mkIf cfg.elixir.enabled (
+      let beamPackages = cfg.elixir.beamPackages;
+      in
+      {
+        home.packages = [
+          beamPackages.elixir_1_19
+          beamPackages.elixir-ls
+        ];
+        dev.dotEmacs.extraLines = ''
+          (require 'elixir-ts-mode)
+          (add-hook 'elixir-ts-mode-hook #'lsp)
+          ;; nixpkgs puts elixir-ls in elixir-ls instead of language_server.sh, which does makes sense, no?
+          (setq lsp-elixir-local-server-command "${beamPackages.elixir-ls}/bin/elixir-ls")
+          (setq lsp-elixir-server-command "elixir-ls")
+        '';
+      }
+    ))
     # # Rust
     # (mkIf cfg.rust.enabled
     #   {

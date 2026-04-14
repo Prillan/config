@@ -125,6 +125,27 @@
               ];
             }
           );
+
+          "test" = withSystem "x86_64-linux" (
+            { pkgs, ... }:
+            inputs.home-manager.lib.homeManagerConfiguration {
+              inherit pkgs;
+              modules = [
+                self.homeModules.rasmus-graphical-user
+                {
+                  home = {
+                    username = "test";
+                    homeDirectory = "/home/test";
+                  };
+                  custom.hostname = "test-machine";
+                  custom.wifiInterface = "xxxxxx";
+                  nix.settings.experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
+                  profiles.dev.langs.erlang.enabled = true;
+                  profiles.dev.langs.elixir.enabled = true;
+                }
+              ];
+            }
+          );
         };
 
         nixosModules.rsync-backup = import ./nixos/modules/backup.nix;
