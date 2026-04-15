@@ -139,6 +139,7 @@ in
         home.packages = [
           pkgs.erlang-language-platform
           beamPackages.erlang
+          beamPackages.rebar3
         ];
         programs.emacs.extraPackages = epkgs: [
           epkgs.erlang
