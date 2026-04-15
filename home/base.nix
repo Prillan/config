@@ -78,6 +78,7 @@ in
       pkgs.pandoc
 
       # Tools
+      pkgs.age
       pkgs.agenix
       pkgs.csvtool
       pkgs.dive
