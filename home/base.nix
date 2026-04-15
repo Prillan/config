@@ -118,11 +118,27 @@ in
     };
     programs.ssh = {
       enable = true;
-      matchBlocks."*" = {
-        compression = true;
-        controlMaster = "auto";
-        controlPersist = "60m";
-      };
+      enableDefaultConfig = false; # deprecated
+      matchBlocks."*" = lib.mkMerge [
+        {
+          # From the old default
+          forwardAgent = lib.mkDefault false;
+          addKeysToAgent = lib.mkDefault "no";
+          compression = lib.mkDefault false;
+          serverAliveInterval = lib.mkDefault 0;
+          serverAliveCountMax = lib.mkDefault 3;
+          hashKnownHosts = lib.mkDefault false;
+          userKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
+          controlMaster = lib.mkDefault "no";
+          controlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
+          controlPersist = lib.mkDefault "no";
+        }
+        {
+          compression = true;
+          controlMaster = "auto";
+          controlPersist = "60m";
+        }
+      ];
     };
 
     programs.zsh = {
