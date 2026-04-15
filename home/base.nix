@@ -2,7 +2,8 @@
 with lib;
 let
   cfg = config.custom;
-in {
+in
+{
   options = {
     custom = {
       # TODO: Clean-up

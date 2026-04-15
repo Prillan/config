@@ -1,24 +1,25 @@
 { config, lib, pkgs, ... }:
 with builtins;
 with lib;
-let cfg = config.profiles.graphical.wayland;
-    lockCommand = pkgs.writeScript "lock" ''
-      ${pkgs.swaylock-effects}/bin/swaylock -f -S -k --clock \
-        --effect-pixelate 10 \
-        --effect-blur 10x10
+let
+  cfg = config.profiles.graphical.wayland;
+  lockCommand = pkgs.writeScript "lock" ''
+    ${pkgs.swaylock-effects}/bin/swaylock -f -S -k --clock \
+      --effect-pixelate 10 \
+      --effect-blur 10x10
+  '';
+
+  swaymsg = "${pkgs.sway}/bin/swaymsg";
+  jq = "${pkgs.jq}/bin/jq";
+  sway-commands = {
+    move-to-next-output = pkgs.writeScript "next-output" ''
+      ${swaymsg} -t get_outputs \
+        | ${jq} '[.[] | select(.active)] as $ws | $ws | .[(. | map(.focused) | index(true) + 1) % length].name' \
+        | ${pkgs.findutils}/bin/xargs ${swaymsg} move workspace to
     '';
+  };
 
-    swaymsg = "${pkgs.sway}/bin/swaymsg";
-    jq = "${pkgs.jq}/bin/jq";
-    sway-commands = {
-      move-to-next-output = pkgs.writeScript "next-output" ''
-        ${swaymsg} -t get_outputs \
-          | ${jq} '[.[] | select(.active)] as $ws | $ws | .[(. | map(.focused) | index(true) + 1) % length].name' \
-          | ${pkgs.findutils}/bin/xargs ${swaymsg} move workspace to
-      '';
-    };
-
-    inherit (pkgs.sway-contrib) grimshot;
+  inherit (pkgs.sway-contrib) grimshot;
 in
 {
   options.profiles.graphical.wayland = {
@@ -57,11 +58,13 @@ in
       config = {
         modifier = "Mod4";
         terminal = "kitty";
-        bars = []; # Handled by waybar instead.
+        bars = [ ]; # Handled by waybar instead.
         keybindings =
-          let modifier = config.wayland.windowManager.sway.config.modifier;
-              grimshot-cmd = "${grimshot}/bin/grimshot --notify";
-          in lib.mkOptionDefault {
+          let
+            modifier = config.wayland.windowManager.sway.config.modifier;
+            grimshot-cmd = "${grimshot}/bin/grimshot --notify";
+          in
+          lib.mkOptionDefault {
             "${modifier}+p" = "exec ${pkgs.dmenu}/bin/dmenu_path | ${pkgs.wofi}/bin/wofi --dmenu | ${pkgs.findutils}/bin/xargs ${swaymsg} exec --";
             "${modifier}+Shift+l" = "exec ${lockCommand}";
 
@@ -87,11 +90,11 @@ in
       extraConfig = lib.mkMerge [
         (readFile "${config.colors.wal-dir}/colors-sway")
         ''
-        bindsym --locked XF86MonBrightnessDown exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-
-        bindsym --locked XF86MonBrightnessUp exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+
+          bindsym --locked XF86MonBrightnessDown exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-
+          bindsym --locked XF86MonBrightnessUp exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+
 
-        bindswitch --reload --locked lid:on output eDP-1 disable
-        bindswitch --reload --locked lid:off output eDP-1 enable
+          bindswitch --reload --locked lid:on output eDP-1 disable
+          bindswitch --reload --locked lid:off output eDP-1 enable
         ''
       ];
       extraSessionCommands = ''
@@ -128,14 +131,16 @@ in
     services.kanshi = {
       enable = true;
       settings = [
-        { profile.name = "undocked";
+        {
+          profile.name = "undocked";
           profile.outputs = [
             {
               criteria = "eDP-1";
             }
           ];
         }
-        { profile.name = "home-docked";
+        {
+          profile.name = "home-docked";
           profile.outputs = [
             {
               criteria = "Samsung Electric Company LS27A600U H4ZRC01423";

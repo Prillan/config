@@ -1,7 +1,8 @@
 { lib, config, pkgs, ... }:
 # A different version of programs.noti
-let cfg = config.custom-programs.noti;
-    inherit (lib) mkOption mkEnableOption types;
+let
+  cfg = config.custom-programs.noti;
+  inherit (lib) mkOption mkEnableOption types;
 in
 {
   # TODO: override programs.noti directly instead
@@ -29,11 +30,13 @@ in
         home.packages = [
           (
             pkgs.writeShellScriptBin "noti" (
-              let buildVar = key: value: ''export ${key}="$(cat ${value})"'';
-                  vars = lib.strings.concatMapAttrsStringSep "\n" buildVar cfg.envPaths;
-              in ''
-                 ${vars}
-                 exec ${pkgs.noti}/bin/noti "$@"
+              let
+                buildVar = key: value: ''export ${key}="$(cat ${value})"'';
+                vars = lib.strings.concatMapAttrsStringSep "\n" buildVar cfg.envPaths;
+              in
+              ''
+                ${vars}
+                exec ${pkgs.noti}/bin/noti "$@"
               ''
             )
           )

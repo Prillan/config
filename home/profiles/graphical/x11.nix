@@ -17,24 +17,26 @@ in
     ];
 
     programs.emacs.package = pkgs.emacs-unstable;
-    programs.urxvt = let
-      inherit (builtins) concatStringsSep;
-      fonts = [ "xft:DejaVu Sans Mono:size=10" "xft:Symbola" ];
-      large = [ "xft:DejaVu Sans Mono:size=16" "xft:Symbola" ];
-      xlarge = [ "xft:DejaVu Sans Mono:size=24" "xft:Symbola" ];
-      set-font = f:
-        let fstring = concatStringsSep "," f;
-        in "command:\\033]710;${fstring}\\007";
-    in {
-      enable = true;
-      scroll.bar.enable = false;
-      fonts = fonts;
-      keybindings = {
-        "C-plus" = set-font large;
-        "C-0" = set-font fonts;
-        "C-0x30" = set-font fonts;
+    programs.urxvt =
+      let
+        inherit (builtins) concatStringsSep;
+        fonts = [ "xft:DejaVu Sans Mono:size=10" "xft:Symbola" ];
+        large = [ "xft:DejaVu Sans Mono:size=16" "xft:Symbola" ];
+        xlarge = [ "xft:DejaVu Sans Mono:size=24" "xft:Symbola" ];
+        set-font = f:
+          let fstring = concatStringsSep "," f;
+          in "command:\\033]710;${fstring}\\007";
+      in
+      {
+        enable = true;
+        scroll.bar.enable = false;
+        fonts = fonts;
+        keybindings = {
+          "C-plus" = set-font large;
+          "C-0" = set-font fonts;
+          "C-0x30" = set-font fonts;
+        };
       };
-    };
 
     services.network-manager-applet.enable = true;
     services.polybar = {
@@ -177,13 +179,16 @@ in
       profileExtra = ''
         export PATH="$HOME/.local/bin:$PATH"
 
-      '' + (if !config.custom.onNixOS then (''
-        if [ -e ${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh ]; then
-           . ${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh;
-        fi
-        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-        export GPG_AGENT_INFO
-      '') else
+      '' + (if !config.custom.onNixOS then
+        (
+          ''
+            if [ -e ${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh ]; then
+               . ${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh;
+            fi
+            export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+            export GPG_AGENT_INFO
+          ''
+        ) else
         "");
     };
     xsession.windowManager.xmonad = {

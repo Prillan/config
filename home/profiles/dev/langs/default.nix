@@ -86,17 +86,18 @@ in
     (mkIf cfg.koka.enabled (
       let kokaMode = "${pkgs.koka.src}/support/emacs/";
       in
-        {
-          home.packages = [
-            pkgs.koka
-          ];
-          dev.dotEmacs.extraLines = ''
-            (setq -koka-load-path "${kokaMode}")
-            (use-package koka-mode
-                :load-path (-koka-load-path)
-                :mode "\\.kk\\'")
-          '';
-        }))
+      {
+        home.packages = [
+          pkgs.koka
+        ];
+        dev.dotEmacs.extraLines = ''
+          (setq -koka-load-path "${kokaMode}")
+          (use-package koka-mode
+              :load-path (-koka-load-path)
+              :mode "\\.kk\\'")
+        '';
+      }
+    ))
     # Java
     (mkIf cfg.java.enabled
       {

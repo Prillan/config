@@ -23,7 +23,7 @@
   };
 
   outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } ({withSystem, config, ...}: {
+    flake-parts.lib.mkFlake { inherit inputs; } ({ withSystem, config, ... }: {
       systems = [ "x86_64-linux" ];
       imports = [
         inputs.home-manager.flakeModules.home-manager
@@ -64,33 +64,33 @@
                   };
                 };
               in
-                {
-                  nixpkgs = reg {
-                    id = "nixpkgs";
-                    input = inputs.nixpkgs;
-                    type = "github";
-                    owner = "NixOS";
-                    repo = "nixpkgs";
+              {
+                nixpkgs = reg {
+                  id = "nixpkgs";
+                  input = inputs.nixpkgs;
+                  type = "github";
+                  owner = "NixOS";
+                  repo = "nixpkgs";
+                };
+                unstable = reg {
+                  id = "unstable";
+                  input = inputs.unstable;
+                  type = "github";
+                  owner = "NixOS";
+                  repo = "nixpkgs";
+                };
+                config = {
+                  from = {
+                    id = "config";
+                    type = "indirect";
                   };
-                  unstable = reg {
-                    id = "unstable";
-                    input = inputs.unstable;
+                  to = {
                     type = "github";
-                    owner = "NixOS";
-                    repo = "nixpkgs";
-                  };
-                  config = {
-                    from = {
-                      id = "config";
-                      type = "indirect";
-                    };
-                    to = {
-                      type = "github";
-                      owner = "Prillan";
-                      repo = "config";
-                    };
+                    owner = "Prillan";
+                    repo = "config";
                   };
                 };
+              };
           };
 
           rasmus-graphical-user = {
@@ -107,7 +107,7 @@
 
         homeConfigurations = {
           "rasmus@kalmiya" = withSystem "x86_64-linux" (
-            {pkgs, ...}:
+            { pkgs, ... }:
             inputs.home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
 
@@ -156,7 +156,7 @@
         };
       };
 
-      perSystem = { pkgs, ...}: {
+      perSystem = { pkgs, ... }: {
         apps.copy-theme = {
           type = "app";
           program =
@@ -190,7 +190,7 @@
                 '';
               };
             in
-              "${prog}/bin/copy-theme";
+            "${prog}/bin/copy-theme";
         };
       };
     });

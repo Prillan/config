@@ -47,7 +47,8 @@ let # TODO: Prettify
          "''${REPO}::''${ARCHIVE}" \
          ${config.home.homeDirectory}
   '';
-in {
+in
+{
   options.borg.enable = mkEnableOption "borg backup script";
   config = mkIf config.borg.enable {
     home.packages = with pkgs; [ borg-backup-script ];
