@@ -4,5 +4,5 @@ let
   work = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDiNDKF1SreuifGMuYOwZFwoyf0bgiq87EcWaq6THPk9";
 in
 {
-  "telegram-token.age".publicKeys = [ user server ];
+  "telegram-token.age".publicKeys = [ user server work ];
 }
