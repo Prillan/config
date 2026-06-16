@@ -119,7 +119,7 @@ in
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false; # deprecated
-      matchBlocks."*" = lib.mkMerge [
+      settings."*" = lib.mkMerge [
         {
           # From the old default
           forwardAgent = lib.mkDefault false;

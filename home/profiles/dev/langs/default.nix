@@ -62,7 +62,7 @@ in
     (mkIf cfg.nix.enabled
       {
         home.packages = [
-          pkgs.nixfmt-rfc-style
+          pkgs.nixfmt
           pkgs.nixpkgs-fmt
           pkgs.nixpkgs-review
         ];
@@ -117,7 +117,7 @@ in
       {
         home.packages = [
           pkgs.purescript
-          pkgs.nodePackages.purescript-language-server
+          # pkgs.nodePackages.purescript-language-server
         ];
         dev.dotEmacs.extraLines = ''
           ;; FROM https://github.com/purescript-emacs/purescript-mode?tab=readme-ov-file#basic-configuration
@@ -128,7 +128,8 @@ in
               (turn-on-purescript-indentation)
               (add-hook 'before-save-hook #'purescript-sort-imports nil t))
             (add-hook 'purescript-mode-hook #'myhook-purescript-mode)
-            :hook (purescript-mode . lsp))
+            ;; :hook (purescript-mode . lsp)
+            )
         '';
       })
     # Erlang
