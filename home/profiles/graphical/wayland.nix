@@ -117,10 +117,10 @@ in
     };
 
     services.swayidle.enable = true;
-    services.swayidle.events = [
-      { event = "before-sleep"; command = "${lockCommand}"; }
-      { event = "lock"; command = "${lockCommand}"; }
-    ];
+    services.swayidle.events = {
+      before-sleep = "${lockCommand}";
+      lock = "${lockCommand}";
+    };
     services.swayidle.timeouts = [
       {
         timeout = 600;
