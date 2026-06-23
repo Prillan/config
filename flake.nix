@@ -31,10 +31,13 @@
       flake = {
         overlays = {
           default = final: prev:
-            let pkgs = unstable.legacyPackages.${prev.system};
-            in {
+            let
+              system = prev.stdenv.hostPlatform.system;
+              pkgs = unstable.legacyPackages.${system};
+            in
+            {
               inherit (pkgs) josm nix-zsh-completions;
-              nixpkgs-review = nixpkgs-review.packages.${prev.system}.default;
+              nixpkgs-review = nixpkgs-review.packages.${system}.default;
             };
         };
 
