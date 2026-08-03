@@ -156,15 +156,20 @@ in
       in
       {
         home.packages = [
-          beamPackages.elixir_1_19
-          beamPackages.elixir-ls
+          beamPackages.elixir_1_20
+          beamPackages.expert
         ];
         dev.dotEmacs.extraLines = ''
           (require 'elixir-ts-mode)
-          (add-hook 'elixir-ts-mode-hook #'lsp)
-          ;; nixpkgs puts elixir-ls in elixir-ls instead of language_server.sh, which does makes sense, no?
-          (setq lsp-elixir-local-server-command "${beamPackages.elixir-ls}/bin/elixir-ls")
-          (setq lsp-elixir-server-command "elixir-ls")
+          (add-hook 'elixir-ts-mode-hook #'lsp-deferred)
+          (with-eval-after-load 'lsp-mode
+            (add-to-list 'lsp-disabled-clients 'elixir-ls)
+            (lsp-register-client
+             (make-lsp-client
+              :new-connection (lsp-stdio-connection
+                               '("${beamPackages.expert}/bin/expert" "--stdio"))
+              :activation-fn (lsp-activate-on "elixir")
+              :server-id 'expert-elixir)))
         '';
       }
     ))
