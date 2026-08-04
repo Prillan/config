@@ -24,14 +24,32 @@ in
           example = [ "nextcloud" ];
         };
       };
+      onFailure = mkOption {
+        type = with types; nullOr lines;
+        default = null;
+        description = ''
+          Script run when a backup fails. The failed unit name is available as $MONITOR_UNIT.
+        '';
+      };
       scripts = mkOption {
         description = "backup scripts";
         type = with types; lazyAttrsOf (submodule {
           options = {
             enable = mkEnableOption "script";
+            preScript = mkOption {
+              type = lines;
+              default = "";
+              description = "Script to run before rsync.";
+            };
             source = {
               dir = mkOption {
-                type = str;
+                type = with types; nullOr str;
+                default = null;
+              };
+              runtimeDirectory = mkOption {
+                type = with types; nullOr str;
+                default = null;
+                description = "Use a systemd RuntimeDirectory as rsync source. Mutually exclusive with dir.";
               };
               filters = mkOption {
                 type = lines;
@@ -100,7 +118,7 @@ in
           name = unit-name k;
           value = {
             wantedBy = [ "timers.target" ];
-            after = [ "multi-user.target" ]; # wait until the system hs started
+            after = [ "multi-user.target" ];
 
             timerConfig = {
               OnCalendar = "Sun 02:00:00";
@@ -109,41 +127,64 @@ in
         })
       cfg.scripts;
 
-    systemd.services = mapAttrs'
-      (k: v:
-        {
-          name = unit-name k;
-          value = {
-            path = [ pkgs.openssh pkgs.rsync ];
-            script =
-              let
-                ssh =
-                  if v.target.sshKeyFile != null
-                  then "ssh -i '${v.target.sshKeyFile}'"
-                  else "ssh";
-                source = v.source.dir;
-                target =
-                  if v.target.host == "" then v.target.dir
-                  else
-                    if v.target.user == "" then "${v.target.host}:${v.target.dir}"
-                    else "${v.target.user}@${v.target.host}:${v.target.dir}";
-                filterFile = pkgs.writeText "${unit-name k}-filters" v.source.filters;
-                filterOpt =
-                  if v.source.filters != ""
-                  then "--filter='merge ${filterFile}'"
-                  else "";
-              in
-              ''
-                set -x
-                echo "$(date): " '${source} -> ${target}'
-                rsync -e "${ssh}" -vrzt ${filterOpt} '${source}' '${target}'
-              '';
-            serviceConfig = {
-              Type = "exec";
-              User = cfg.user.name;
+    systemd.services = mkMerge [
+      (mapAttrs'
+        (k: v:
+          {
+            name = unit-name k;
+            value = {
+              path = [ pkgs.openssh pkgs.rsync ];
+              script =
+                let
+                  ssh =
+                    if v.target.sshKeyFile != null
+                    then "ssh -i '${v.target.sshKeyFile}'"
+                    else "ssh";
+                  sourceArg =
+                    if v.source.runtimeDirectory != null
+                    then ''"$RUNTIME_DIRECTORY/"''
+                    else lib.escapeShellArg (assert v.source.dir != null; v.source.dir);
+                  targetStr =
+                    if v.target.host == "" then v.target.dir
+                    else
+                      if v.target.user == "" then "${v.target.host}:${v.target.dir}"
+                      else "${v.target.user}@${v.target.host}:${v.target.dir}";
+                  targetArg = lib.escapeShellArg targetStr;
+                  filterFile = pkgs.writeText "${unit-name k}-filters" v.source.filters;
+                  filterOpt =
+                    if v.source.filters != ""
+                    then "--filter='merge ${filterFile}'"
+                    else "";
+                in
+                ''
+                  set -ex
+                  ${v.preScript}
+                  echo "$(date): ${sourceArg} -> ${targetArg}"
+                  rsync -e "${ssh}" -vrzt ${filterOpt} ${sourceArg} ${targetArg}
+                '';
+              serviceConfig = {
+                Type = "exec";
+                User = cfg.user.name;
+              } // optionalAttrs (v.source.runtimeDirectory != null) {
+                RuntimeDirectory = v.source.runtimeDirectory;
+              };
+              unitConfig = optionalAttrs (cfg.onFailure != null) {
+                OnFailure = "rsync-backup-notify@%n.service";
+              };
             };
+          })
+        cfg.scripts)
+
+      (optionalAttrs (cfg.onFailure != null) {
+        "rsync-backup-notify@" = {
+          description = "Notify on rsync-backup failure for %i";
+          script = cfg.onFailure;
+          serviceConfig = {
+            Type = "oneshot";
+            User = cfg.user.name;
           };
-        })
-      cfg.scripts;
+        };
+      })
+    ];
   };
 }
