@@ -46,6 +46,58 @@ in
     gtk.cursorTheme.size = config.home.pointerCursor.size;
     catppuccin.gtk.icon.enable = true; # Papirus icons with catppuccin folder colours
 
+    # Style GTK3 classic menus (Emacs menu bar, mostly) with the Catppuccin
+    # palette. Scoped to menubar/menu/menuitem so it doesn't touch modern
+    # GTK apps that use headerbars instead.
+    home.file.".config/gtk-3.0/gtk.css".text = ''
+      menubar, menu, menuitem {
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 10pt;
+      }
+
+      menubar {
+        background-color: ${c.base.hex};
+        color: ${c.text.hex};
+        border-bottom: 1px solid ${c.surface0.hex};
+      }
+
+      menubar > menuitem {
+        background-color: ${c.base.hex};
+        color: ${c.text.hex};
+        padding: 4px 8px;
+      }
+
+      menubar > menuitem:hover,
+      menubar > menuitem:active {
+        background-color: ${c.surface0.hex};
+        color: ${c.text.hex};
+      }
+
+      menu {
+        background-color: ${c.mantle.hex};
+        color: ${c.text.hex};
+        border: 1px solid ${c.surface0.hex};
+        padding: 4px 0;
+      }
+
+      menu > menuitem {
+        color: ${c.text.hex};
+        padding: 4px 12px;
+      }
+
+      menu > menuitem:hover,
+      menu > menuitem:active {
+        background-color: ${c.blue.hex};
+        color: ${c.base.hex};
+      }
+
+      menu > separator {
+        background-color: ${c.surface1.hex};
+        min-height: 1px;
+        margin: 4px 0;
+      }
+    '';
+
     programs.emacs.package = pkgs.emacs-git-pgtk;
     dev.dotEmacs.extraLines = ''
       (setq catppuccin-flavor '${config.catppuccin.flavor})
