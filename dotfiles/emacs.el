@@ -57,9 +57,46 @@
   :demand t
   :commands (general-define-key))
 
-(use-package piper
-    :load-path (-piper-load-path)
-    :bind ("C-c C-|" . piper))
+(use-package vertico
+  :demand t
+  :custom
+  (vertico-sort-function #'vertico-sort-history-alpha)
+  :config
+  (vertico-mode 1))
+
+(use-package marginalia
+  :demand t
+  :config
+  (marginalia-mode 1))
+
+(use-package orderless
+  :demand t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package consult
+  :bind
+  (("C-x b"   . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("M-y"     . consult-yank-pop)
+   ("M-g g"   . consult-goto-line)
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o"   . consult-outline)
+   ("M-g i"   . consult-imenu)
+   ("M-s l"   . consult-line)
+   ("M-s r"   . consult-ripgrep)
+   ("M-s g"   . consult-grep)))
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings)))
+
+(use-package embark-consult
+  :after (embark consult)
+  :demand t)
 
 (require 'po)
 (require 'po-mode)
@@ -133,6 +170,11 @@ Saves to a temp file and puts the filename in the kill ring."
      tab-mark
      newline-mark)))
 
+(use-package dtrt-indent
+  :defer 1
+  :config
+  (dtrt-indent-global-mode 1))
+
 (use-package ripgrep
   :ensure t
   :custom
@@ -174,7 +216,7 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package projectile
   :defer 2
   :custom
-  (projectile-completion-system 'helm)
+  (projectile-completion-system 'default)
   (projectile-globally-ignored-directories
    '(".idea"
      ".ensime_cache"
@@ -329,8 +371,6 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (use-package flycheck
   :init (global-flycheck-mode))
-
-(helm-mode)
 
 ;; Edit server
 (use-package edit-server
@@ -892,7 +932,6 @@ Saves to a temp file and puts the filename in the kill ring."
 ;; (MA)GIT
 
 ;; Global bindings
-(global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "M-Q") 'unfill-paragraph)
 
 (global-set-key (kbd "C-c 3") 'comment-region)

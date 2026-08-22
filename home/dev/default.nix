@@ -2,7 +2,6 @@
 with lib;
 let
   cfg = config.dev;
-  emacsPiper = pkgs.callPackage (import ../../pkgs/piper.nix) { };
 in
 {
   options.dev = {
@@ -39,8 +38,6 @@ in
         extra = cfg.dotEmacs.extraLines;
       in
       ''
-        (setq -piper-load-path "${emacsPiper}")
-
         ${base}
         ;; Begin lines from dev.dotEmacs.extraLines ;;
         ${extra}
@@ -60,7 +57,6 @@ in
 
         # Searching
         epkgs.ag
-        epkgs.helm-rg
 
         # Navigation
         epkgs.dumb-jump
@@ -82,10 +78,16 @@ in
         # Other
         epkgs.browse-at-remote
         epkgs.dap-mode
+        epkgs.dtrt-indent
         epkgs.edit-server
+        epkgs.consult
+        epkgs.embark
+        epkgs.embark-consult
         epkgs.general
-        epkgs.helm
+        epkgs.marginalia
         epkgs.no-littering
+        epkgs.orderless
+        epkgs.vertico
         epkgs.po-mode
         epkgs.rainbow-delimiters
         epkgs.restclient
