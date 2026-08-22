@@ -1,0 +1,292 @@
+{ config, lib, pkgs, ... }:
+with builtins;
+with lib;
+let
+  cfg = config.profiles.graphical.hyprland;
+
+  # Pull the full palette from the catppuccin/nix pinned palette source (IFD).
+  # config.catppuccin.sources.palette is a derivation whose output contains palette.json.
+  palette = fromJSON (readFile "${config.catppuccin.sources.palette}/palette.json");
+  # Use whichever flavor is set globally so overriding catppuccin.flavor just works.
+  c = palette.${config.catppuccin.flavor}.colors;
+
+  # Helpers to produce Hyprland color strings (rgba(RRGGBBAA)) and plain hex (#RRGGBB).
+  # palette entries have a .hex field with the "#" prefix.
+  raw  = entry: substring 1 6 entry.hex;            # "1e66f5"
+  rgba = entry: alpha: "rgba(${raw entry}${alpha})"; # "rgba(1e66f5ff)"
+
+  lockCommand = "${pkgs.hyprlock}/bin/hyprlock";
+  grimblast   = "${pkgs.grimblast}/bin/grimblast";
+
+  # CSS @define-color declarations generated from the palette — prepended to the
+  # structural base CSS file so both come from one source of truth.
+  waybargPaletteCSS = ''
+    @define-color base      ${c.base.hex};
+    @define-color mantle    ${c.mantle.hex};
+    @define-color crust     ${c.crust.hex};
+    @define-color surface0  ${c.surface0.hex};
+    @define-color surface1  ${c.surface1.hex};
+    @define-color overlay1  ${c.overlay1.hex};
+    @define-color subtext0  ${c.subtext0.hex};
+    @define-color text      ${c.text.hex};
+    @define-color mauve     ${c.mauve.hex};
+    @define-color red       ${c.red.hex};
+    @define-color peach     ${c.peach.hex};
+    @define-color yellow    ${c.yellow.hex};
+    @define-color green     ${c.green.hex};
+    @define-color teal      ${c.teal.hex};
+    @define-color sky       ${c.sky.hex};
+    @define-color sapphire  ${c.sapphire.hex};
+    @define-color blue      ${c.blue.hex};
+    @define-color lavender  ${c.lavender.hex};
+
+    @define-color warning   @yellow;
+    @define-color critical  @red;
+  '';
+in
+{
+  options.profiles.graphical.hyprland = {
+    enable = mkEnableOption "Hyprland graphical profile";
+  };
+
+  config = mkIf cfg.enable {
+    profiles.graphical.common.enable = true;
+
+    catppuccin.enable = true;
+    catppuccin.flavor = "latte";
+    catppuccin.accent    = "blue";
+
+    home.packages = [
+      pkgs.grimblast
+      pkgs.wofi
+      pkgs.brightnessctl
+    ];
+
+    catppuccin.cursors.enable  = true;
+    home.pointerCursor = {
+      size = 24;
+      gtk.enable = true;
+      x11.enable = true;
+    };
+    gtk.cursorTheme.size = config.home.pointerCursor.size;
+    catppuccin.gtk.icon.enable = true; # Papirus icons with catppuccin folder colours
+
+    programs.emacs.package = pkgs.emacs-git-pgtk;
+
+    services.mako.enable = true;
+    catppuccin.mako.enable = true;
+
+    programs.kitty = {
+      enable = true;
+      settings = {
+        enable_audio_bell       = false;
+        touch_scroll_multiplier = 5;
+      };
+    };
+
+    catppuccin.kitty.enable = true;
+
+    wayland.windowManager.hyprland = {
+      enable = true;
+      systemd.enable = true;
+      xwayland.enable = true;
+      configType = "hyprlang";
+
+      settings = {
+        monitor  = ",preferred,auto,1";
+        "$mod"   = "SUPER";
+
+        env = [
+          "XCURSOR_SIZE,${toString config.home.pointerCursor.size}"
+          "XCURSOR_THEME,${config.home.pointerCursor.name}"
+          "SDL_VIDEODRIVER,wayland"
+          "QT_QPA_PLATFORM,wayland"
+          "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+          "_JAVA_AWT_WM_NONREPARENTING,1"
+        ];
+
+        general = {
+          gaps_in       = 5;
+          gaps_out      = 10;
+          border_size   = 2;
+          # Active border: blue → lavender gradient; inactive: surface1
+          "col.active_border"   = "${rgba c.blue "ff"} ${rgba c.lavender "ff"} 45deg";
+          "col.inactive_border" = rgba c.surface1 "ff";
+          layout        = "dwindle";
+          allow_tearing = false;
+        };
+
+        decoration = {
+          rounding         = 8;
+          active_opacity   = 1.0;
+          inactive_opacity = 0.95;
+          blur = {
+            enabled  = true;
+            size     = 5;
+            passes   = 2;
+            vibrancy = 0.17;
+          };
+          shadow = {
+            enabled      = true;
+            range        = 8;
+            render_power = 3;
+            color        = "rgba(00000033)";
+          };
+        };
+
+        animations = {
+          enabled = true;
+          bezier  = "easeOut, 0.16, 1, 0.3, 1";
+          animation = [
+            "windows, 1, 5, easeOut, slide"
+            "windowsOut, 1, 5, easeOut, slide"
+            "border, 1, 10, default"
+            "fade, 1, 5, default"
+            "workspaces, 1, 5, easeOut, slide"
+          ];
+        };
+
+        input = {
+          kb_layout    = "se";
+          follow_mouse = 1;
+          sensitivity  = 0;
+          touchpad = {
+            natural_scroll = false;
+            tap-to-click   = true;
+            drag_lock      = true;
+          };
+        };
+
+        gestures.workspace_swipe_touch = true;
+
+        dwindle = {
+          preserve_split = true;
+        };
+
+        misc = {
+          force_default_wallpaper = 0;
+          disable_hyprland_logo   = true;
+          background_color        = "rgb(${raw c.base})";
+        };
+
+        bind =
+          [
+            "$mod, Return, exec, kitty"
+            "$mod, P, exec, ${pkgs.wofi}/bin/wofi --show drun"
+            "$mod SHIFT, Q, killactive"
+            "$mod SHIFT, E, exit"
+            "$mod, F, fullscreen"
+            "$mod, Space, togglefloating"
+            # Focus
+            "$mod, left,  movefocus, l"
+            "$mod, right, movefocus, r"
+            "$mod, up,    movefocus, u"
+            "$mod, down,  movefocus, d"
+            # Move windows
+            "$mod SHIFT, left,  movewindow, l"
+            "$mod SHIFT, right, movewindow, r"
+            "$mod SHIFT, up,    movewindow, u"
+            "$mod SHIFT, down,  movewindow, d"
+            # § — move current workspace to next monitor
+            "$mod, code:49, movecurrentworkspacetomonitor, +1"
+            "$mod SHIFT, Escape, exec, ${lockCommand}"
+            # Screenshots
+            "$mod, Print, exec, ${grimblast} --notify save active"
+            "$mod SHIFT, Print, exec, ${grimblast} --notify save area"
+            "$mod MOD1, Print, exec, ${grimblast} --notify save output"
+          ]
+          ++ map (n: "$mod, ${toString n}, workspace, ${toString n}") (lib.range 1 9)
+          ++ map (n: "$mod SHIFT, ${toString n}, movetoworkspace, ${toString n}") (lib.range 1 9)
+          ++ [ "$mod, 0, workspace, 10" "$mod SHIFT, 0, movetoworkspace, 10" ];
+
+        binde = [
+          "$mod CTRL, left,  resizeactive, -20 0"
+          "$mod CTRL, right, resizeactive, 20 0"
+          "$mod CTRL, up,    resizeactive, 0 -20"
+          "$mod CTRL, down,  resizeactive, 0 20"
+        ];
+
+        bindm = [
+          "$mod, mouse:272, movewindow"
+          "$mod, mouse:273, resizewindow"
+        ];
+
+        bindl = [
+          ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
+          ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
+          ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+          ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ", XF86AudioMute,        exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ", XF86AudioMicMute,     exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+          ", switch:on:Lid Switch, exec, ${lockCommand}"
+        ];
+      };
+
+    };
+
+    # catppuccin/nix handles the full hyprlock theme (colors + default layout).
+    programs.hyprlock.enable    = true;
+    catppuccin.hyprlock.enable  = true;
+
+    services.hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          lock_cmd         = "pidof hyprlock || ${lockCommand}";
+          before_sleep_cmd = lockCommand;
+          after_sleep_cmd  = "hyprctl dispatch dpms on";
+        };
+        listener = [
+          {
+            timeout    = 300;
+            on-timeout = "pidof hyprlock || ${lockCommand}";
+          }
+          {
+            timeout    = 600;
+            on-timeout = "hyprctl dispatch dpms off";
+            on-resume  = "hyprctl dispatch dpms on";
+          }
+        ];
+      };
+    };
+
+    programs.waybar = {
+      enable = true;
+      # Palette @define-color declarations from the catppuccin flake,
+      # concatenated with the structural CSS in the base file.
+      style = waybargPaletteCSS + readFile ../../../waybar/hyprland-style-base.css;
+      settings = {
+        mainBar = fromJSON (readFile ../../../waybar/hyprland-config);
+      };
+      systemd.enable = true;
+    };
+
+    services.kanshi = {
+      enable = true;
+      settings = [
+        {
+          profile.name    = "undocked";
+          profile.outputs = [{ criteria = "eDP-1"; }];
+        }
+        {
+          profile.name    = "home-docked";
+          profile.outputs = [
+            {
+              criteria = "Samsung Electric Company LS27A600U H4ZRC01423";
+              position = "1920,0";
+              mode     = "2560x1440";
+              status   = "enable";
+            }
+            {
+              criteria = "ASUSTek COMPUTER INC VG259 L6LMQS191984";
+              position = "0,0";
+              mode     = "1920x1080";
+              status   = "enable";
+            }
+            { criteria = "eDP-1"; }
+          ];
+        }
+      ];
+    };
+  };
+}
