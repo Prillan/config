@@ -20,6 +20,9 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.darwin.follows = "";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    catppuccin.url = "github:catppuccin/nix";
+    catppuccin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
@@ -45,9 +48,11 @@
           base = {
             imports = [
               inputs.agenix.homeManagerModules.default
+              inputs.catppuccin.homeModules.catppuccin
               ./home-modules/noti
               ./home
             ];
+            catppuccin.autoEnable = false;
             nixpkgs.overlays = [
               emacs-overlay.overlay
               inputs.agenix.overlays.default
@@ -101,7 +106,7 @@
             borg.enable = true;
             profiles.dev.enable = true;
             profiles.fluff.enable = true;
-            profiles.graphical.wayland.enable = true;
+            profiles.graphical.hyprland.enable = true;
             profiles.mapping.enable = true;
             profiles.writing.enable = true;
             programs.home-manager.enable = true;
