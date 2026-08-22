@@ -296,6 +296,10 @@ in
 
     catppuccin.waybar.enable = true;
 
+    # Chevron modules (custom/arrow1..10, battery#leftarrow,
+    # battery#arrow) are still defined in hyprland-config but removed
+    # from modules-left/right. To restore the powerline look,
+    # re-insert them between adjacent modules.
     programs.waybar = {
       enable = true;
       style = readFile ../../../waybar/hyprland-style-base.css;

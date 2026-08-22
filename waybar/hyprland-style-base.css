@@ -20,7 +20,7 @@ window#waybar {
 	background: alpha(@base, 0.93);
 	color: @text;
 	font-family: "FantasqueSansM Nerd Font", "Symbols Nerd Font Mono";
-	font-size: 13px;
+	font-size: 14px;
 }
 
 /* Workspaces */
@@ -94,19 +94,20 @@ window#waybar {
 #network,
 #pulseaudio,
 #temperature {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 8px;
+	padding-right: 8px;
 }
 
 /* Powerline module backgrounds — left to right */
-#pulseaudio  { background: @mauve;    color: @base;  }
-#network     { background: @sapphire; color: @base;  }
-#memory      { background: @teal;     color: @base;  }
-#cpu         { background: @green;    color: @base;  }
-#temperature { background: @peach;    color: @base;  }
-#battery     { background: @yellow;   color: @crust; }
-#language    { background: @blue;     color: @base;  }
-#clock       { background: @lavender; color: @base;  }
+#pulseaudio   { background: @mauve;    color: @base;  }
+#network      { background: @sapphire; color: @base;  }
+#memory       { background: @teal;     color: @base;  }
+#cpu          { background: @green;    color: @base;  }
+#temperature  { background: @peach;    color: @base;  }
+#battery      { background: @yellow;   color: @crust; }
+#language     { background: @blue;     color: @base;  }
+#clock.date   { background: @mauve;    color: @base;  }
+#clock.time   { background: @lavender; color: @base;  }
 
 /* Powerline arrows — right side (left to right):
    transparent → mauve → sapphire → teal → green → peach → yellow → blue → lavender → crust */

@@ -5,30 +5,20 @@
   "modules-left": [
     "hyprland/workspaces",
     "hyprland/submap",
-    "custom/arrow10"
-  ],
-  "modules-center": [
     "hyprland/window"
   ],
+  "modules-center": [],
   "modules-right": [
-    "custom/arrow9",
     "pulseaudio",
-    "custom/arrow8",
     "network",
-    "custom/arrow7",
     "memory",
-    "custom/arrow6",
     "cpu",
-    "custom/arrow5",
     "temperature",
-    "battery#leftarrow",
     "battery",
-    "battery#arrow",
     "hyprland/language",
-    "custom/arrow2",
-    "clock",
-    "custom/arrow1",
-    "tray"
+    "tray",
+    "clock#date",
+    "clock#time"
   ],
   "battery": {
     "interval": 10,
@@ -51,12 +41,6 @@
     ],
     "tooltip": false
   },
-  "clock": {
-    "interval": 1,
-    "format": "  {:%H:%M:%S}",
-    "format-alt": "  {:%e %b %Y}",
-    "tooltip": false
-  },
   "cpu": {
     "interval": 5,
     "format": "  {usage}%",
@@ -68,8 +52,7 @@
     "tooltip": false
   },
   "hyprland/language": {
-    "format": "  {}",
-    "min-length": 5,
+    "format": "  {short}",
     "on-click": "hyprctl switchxkblayout all next",
     "tooltip": false
   },
@@ -90,7 +73,7 @@
   },
   "memory": {
     "interval": 5,
-    "format": "  {used:0.1f}G",
+    "format": "  {used:0.1f}G/{total:0.1f}G",
     "format-alt": "  {used:0.1f}/{total:0.1f}G",
     "states": {
       "warning": 70,
@@ -133,7 +116,9 @@
       "",
       ""
     ],
-    "tooltip": false
+    "tooltip": false,
+    "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+    "input-filename": "temp1_input"
   },
   "tray": {
     "icon-size": 16,
@@ -193,6 +178,16 @@
     "format-charging": "",
     "format-plugged": "",
     "format-full": "",
+    "tooltip": false
+  },
+  "clock#date": {
+    "interval": 20,
+    "format": "{:%e %b %Y}",
+    "tooltip": false
+  },
+  "clock#time": {
+    "interval": 1,
+    "format": "{:%H:%M:%S}",
     "tooltip": false
   }
 }
