@@ -47,6 +47,23 @@ in
     catppuccin.gtk.icon.enable = true; # Papirus icons with catppuccin folder colours
 
     programs.emacs.package = pkgs.emacs-git-pgtk;
+    dev.dotEmacs.extraLines = ''
+      (setq catppuccin-flavor '${config.catppuccin.flavor})
+      (load-theme 'catppuccin t)
+
+      ;; catppuccin's default magit-diff faces put green/red text on a
+      ;; surface1 background — low contrast, especially on latte. Tint the
+      ;; background instead and let the foreground fall back to normal text.
+      (with-eval-after-load 'magit
+        (let* ((green (catppuccin-color 'green))
+               (red   (catppuccin-color 'red))
+               (text  (catppuccin-color 'text)))
+          (custom-set-faces
+           `(magit-diff-added             ((t (:background ,(catppuccin-recolor green 75) :foreground ,text :extend t))))
+           `(magit-diff-added-highlight   ((t (:background ,(catppuccin-recolor green 60) :foreground ,text :extend t))))
+           `(magit-diff-removed           ((t (:background ,(catppuccin-recolor red   75) :foreground ,text :extend t))))
+           `(magit-diff-removed-highlight ((t (:background ,(catppuccin-recolor red   60) :foreground ,text :extend t)))))))
+    '';
 
     services.mako.enable = true;
     catppuccin.mako.enable = true;
