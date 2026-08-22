@@ -72,7 +72,7 @@ in
         epkgs.projectile-ripgrep
 
         # Themes
-        epkgs.doom-themes
+        epkgs.catppuccin-theme
 
         # Other
         epkgs.browse-at-remote

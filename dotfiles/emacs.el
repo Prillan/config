@@ -123,16 +123,8 @@
           (sh-mode         . bash-ts-mode)
           (yaml-mode       . yaml-ts-mode))))
 
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-opera t)
-
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+;; Theme is loaded from dev.dotEmacs.extraLines so the flavor tracks
+;; config.catppuccin.flavor from the enclosing NixOS/home-manager module.
 
 (defun screenshot (type)
   "Save a screenshot of the current frame as an image in TYPE format.
