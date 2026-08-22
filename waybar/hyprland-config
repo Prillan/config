@@ -21,9 +21,9 @@
     "cpu",
     "custom/arrow5",
     "temperature",
-    "custom/arrow4",
+    "battery#leftarrow",
     "battery",
-    "custom/arrow3",
+    "battery#arrow",
     "hyprland/language",
     "custom/arrow2",
     "clock",
@@ -147,14 +147,6 @@
     "format": "",
     "tooltip": false
   },
-  "custom/arrow3": {
-    "format": "",
-    "tooltip": false
-  },
-  "custom/arrow4": {
-    "format": "",
-    "tooltip": false
-  },
   "custom/arrow5": {
     "format": "",
     "tooltip": false
@@ -177,6 +169,30 @@
   },
   "custom/arrow10": {
     "format": "",
+    "tooltip": false
+  },
+  "battery#arrow": {
+    "interval": 10,
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "",
+    "format-charging": "",
+    "format-plugged": "",
+    "format-full": "",
+    "tooltip": false
+  },
+  "battery#leftarrow": {
+    "interval": 10,
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "",
+    "format-charging": "",
+    "format-plugged": "",
+    "format-full": "",
     "tooltip": false
   }
 }

@@ -26,7 +26,7 @@ window#waybar {
 /* Workspaces */
 
 #workspaces {
-	margin-left: 2px;
+	margin-left: 0;
 }
 
 #workspaces button {
@@ -115,8 +115,6 @@ window#waybar {
 #custom-arrow7,
 #custom-arrow6,
 #custom-arrow5,
-#custom-arrow4,
-#custom-arrow3,
 #custom-arrow2,
 #custom-arrow1 {
 	font-size: 16px;
@@ -127,10 +125,51 @@ window#waybar {
 #custom-arrow7 { color: @teal;     background: @sapphire;   }
 #custom-arrow6 { color: @green;    background: @teal;       }
 #custom-arrow5 { color: @peach;    background: @green;      }
-#custom-arrow4 { color: @yellow;   background: @peach;      }
-#custom-arrow3 { color: @blue;     background: @yellow;     }
 #custom-arrow2 { color: @lavender; background: @blue;       }
 #custom-arrow1 { color: @crust;    background: @lavender;   }
+
+/* Leading chevron: the shape is the battery block's colour (so it visually
+   extends battery into temperature), sitting on the temperature background. */
+#battery.leftarrow {
+	color: @yellow;
+	background: @peach;
+	font-size: 16px;
+	padding: 0;
+}
+
+#battery.leftarrow.warning:not(.charging) {
+	color: @peach;
+	background: @peach;
+}
+
+#battery.leftarrow.charging,
+#battery.leftarrow.plugged {
+	color: @green;
+	background: @peach;
+}
+
+/* Trailing chevron: shape = language block colour (@blue), sitting on the
+   battery background — tracks battery state via .warning/.charging classes. */
+#battery.arrow {
+	color: @blue;
+	background: @yellow;
+	font-size: 16px;
+	padding: 0;
+}
+
+/* Explicit `color: @blue` in each state overrides the more-specific
+   `#battery.warning:not(.charging)` etc. rules that would otherwise
+   repaint the chevron shape white. */
+#battery.arrow.warning:not(.charging) {
+	color: @blue;
+	background: @peach;
+}
+
+#battery.arrow.charging,
+#battery.arrow.plugged {
+	color: @blue;
+	background: @green;
+}
 
 /* Warning states */
 #network.disconnected,
@@ -162,4 +201,38 @@ window#waybar {
 	animation-iteration-count: infinite;
 	animation-direction: alternate;
 	animation-duration: 1s;
+}
+
+/* Trailing chevron blinks in sync with the battery block. Uses its own
+   keyframe so `color` (the chevron shape colour = language block bg) is
+   preserved instead of flashing to @base. */
+#battery.arrow.critical:not(.charging) {
+	animation-name: blink-critical-arrow;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-duration: 1s;
+}
+
+@keyframes blink-critical-arrow {
+	to {
+		background-color: @red;
+	}
+}
+
+/* Leading chevron blinks its `color` (the shape) toward @red — the shape
+   *is* the battery-side colour here, so animating `color` is what tracks
+   the battery block's blink; `background` stays temperature-peach. */
+#battery.leftarrow.critical:not(.charging) {
+	animation-name: blink-critical-leftarrow;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-duration: 1s;
+}
+
+@keyframes blink-critical-leftarrow {
+	to {
+		color: @red;
+	}
 }
