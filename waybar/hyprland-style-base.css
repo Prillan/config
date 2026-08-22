@@ -1,12 +1,9 @@
 @keyframes blink-critical {
 	to {
-		background-color: @critical;
+		background-color: @red;
 		color: @base;
 	}
 }
-
-
-/* Reset */
 
 * {
 	border: none;
@@ -19,45 +16,23 @@
 	icon-shadow: none;
 }
 
-
-/* Bar */
-
 window#waybar {
 	background: alpha(@base, 0.93);
 	color: @text;
-	font-family: "JetBrains Mono", "Font Awesome 7 Free Solid", "Font Awesome 7 Free", "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
-	font-size: 12px;
+	font-family: "FantasqueSansM Nerd Font", "Symbols Nerd Font Mono";
+	font-size: 13px;
 }
-
-
-/* Pill shape shared by all right-side modules */
-
-#battery,
-#clock,
-#cpu,
-#language,
-#memory,
-#network,
-#pulseaudio,
-#temperature {
-	background: @surface0;
-	border-radius: 6px;
-	padding: 2px 10px;
-	margin: 4px 3px;
-}
-
 
 /* Workspaces */
 
 #workspaces {
-	margin: 4px 4px 4px 6px;
+	margin-left: 2px;
 }
 
 #workspaces button {
 	padding: 2px 8px;
-	border-radius: 6px;
 	color: @subtext0;
-	background: transparent;
+	background: @surface0;
 }
 
 #workspaces button.active {
@@ -80,76 +55,111 @@ window#waybar {
 	color: @text;
 }
 
-
-/* Window title */
-
-#window {
-	color: @subtext0;
-	font-size: 11px;
-	padding: 0 8px;
-	margin-left: 4px;
+/* Left-side cap after workspaces — transitions surface0 → bar background */
+#custom-arrow10 {
+	font-size: 16px;
+	color: @surface0;
+	background: transparent;
 }
 
-
 /* Submap indicator */
-
 #submap {
 	background: @red;
 	color: @base;
-	border-radius: 6px;
 	padding: 2px 10px;
-	margin: 4px 3px;
 }
 
-
-/* Warnings */
-
-#network.disconnected,
-#memory.warning,
-#cpu.warning,
-#temperature.warning,
-#battery.warning.discharging {
-	color: @warning;
+/* Window title */
+#window {
+	color: @subtext0;
+	padding: 0 8px;
 }
-
-
-/* Critical blink */
-
-#memory.critical,
-#cpu.critical,
-#temperature.critical,
-#battery.critical.discharging {
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
-	animation-direction: alternate;
-	animation-name: blink-critical;
-	animation-duration: 1s;
-}
-
-
-/* Battery states */
-
-#battery.charging,
-#battery.plugged {
-	color: @green;
-}
-
-
-/* Clock */
-
-#clock {
-	background: @mantle;
-	font-weight: 600;
-}
-
 
 /* Tray */
-
 #tray {
-	padding: 2px 6px;
-	margin: 4px 3px;
+	padding: 2px 8px;
+	background: @crust;
 }
 
 #tray > .passive {
 	-gtk-icon-effect: dim;
+}
+
+/* Right-side module padding */
+#battery,
+#clock,
+#cpu,
+#language,
+#memory,
+#network,
+#pulseaudio,
+#temperature {
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+/* Powerline module backgrounds — left to right */
+#pulseaudio  { background: @mauve;    color: @base;  }
+#network     { background: @sapphire; color: @base;  }
+#memory      { background: @teal;     color: @base;  }
+#cpu         { background: @green;    color: @base;  }
+#temperature { background: @peach;    color: @base;  }
+#battery     { background: @yellow;   color: @crust; }
+#language    { background: @blue;     color: @base;  }
+#clock       { background: @lavender; color: @base;  }
+
+/* Powerline arrows — right side (left to right):
+   transparent → mauve → sapphire → teal → green → peach → yellow → blue → lavender → crust */
+#custom-arrow9,
+#custom-arrow8,
+#custom-arrow7,
+#custom-arrow6,
+#custom-arrow5,
+#custom-arrow4,
+#custom-arrow3,
+#custom-arrow2,
+#custom-arrow1 {
+	font-size: 16px;
+}
+
+#custom-arrow9 { color: @mauve;    background: transparent; }
+#custom-arrow8 { color: @sapphire; background: @mauve;      }
+#custom-arrow7 { color: @teal;     background: @sapphire;   }
+#custom-arrow6 { color: @green;    background: @teal;       }
+#custom-arrow5 { color: @peach;    background: @green;      }
+#custom-arrow4 { color: @yellow;   background: @peach;      }
+#custom-arrow3 { color: @blue;     background: @yellow;     }
+#custom-arrow2 { color: @lavender; background: @blue;       }
+#custom-arrow1 { color: @crust;    background: @lavender;   }
+
+/* Warning states */
+#network.disconnected,
+#memory.warning,
+#cpu.warning,
+#temperature.warning {
+	color: @base;
+	background: @yellow;
+}
+
+#battery.warning:not(.charging) {
+	color: @base;
+	background: @peach;
+}
+
+#battery.charging,
+#battery.plugged {
+	color: @crust;
+	background: @green;
+}
+
+/* Critical blink */
+#memory.critical,
+#cpu.critical,
+#temperature.critical,
+#battery.critical:not(.charging) {
+	animation-name: blink-critical;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-duration: 1s;
 }

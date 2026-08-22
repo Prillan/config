@@ -22,6 +22,7 @@ in
       pkgs.carlito
       pkgs.font-awesome
       pkgs.jetbrains-mono
+      pkgs.nerd-fonts.fantasque-sans-mono
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-color-emoji
