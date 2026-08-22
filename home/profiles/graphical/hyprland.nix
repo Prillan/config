@@ -18,31 +18,6 @@ let
   lockCommand = "${pkgs.hyprlock}/bin/hyprlock";
   grimblast   = "${pkgs.grimblast}/bin/grimblast";
 
-  # CSS @define-color declarations generated from the palette — prepended to the
-  # structural base CSS file so both come from one source of truth.
-  waybargPaletteCSS = ''
-    @define-color base      ${c.base.hex};
-    @define-color mantle    ${c.mantle.hex};
-    @define-color crust     ${c.crust.hex};
-    @define-color surface0  ${c.surface0.hex};
-    @define-color surface1  ${c.surface1.hex};
-    @define-color overlay1  ${c.overlay1.hex};
-    @define-color subtext0  ${c.subtext0.hex};
-    @define-color text      ${c.text.hex};
-    @define-color mauve     ${c.mauve.hex};
-    @define-color red       ${c.red.hex};
-    @define-color peach     ${c.peach.hex};
-    @define-color yellow    ${c.yellow.hex};
-    @define-color green     ${c.green.hex};
-    @define-color teal      ${c.teal.hex};
-    @define-color sky       ${c.sky.hex};
-    @define-color sapphire  ${c.sapphire.hex};
-    @define-color blue      ${c.blue.hex};
-    @define-color lavender  ${c.lavender.hex};
-
-    @define-color warning   @yellow;
-    @define-color critical  @red;
-  '';
 in
 {
   options.profiles.graphical.hyprland = {
@@ -250,11 +225,11 @@ in
       };
     };
 
+    catppuccin.waybar.enable = true;
+
     programs.waybar = {
       enable = true;
-      # Palette @define-color declarations from the catppuccin flake,
-      # concatenated with the structural CSS in the base file.
-      style = waybargPaletteCSS + readFile ../../../waybar/hyprland-style-base.css;
+      style = readFile ../../../waybar/hyprland-style-base.css;
       settings = {
         mainBar = fromJSON (readFile ../../../waybar/hyprland-config);
       };
