@@ -1,13 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, catppuccin-palette-src, ... }:
 with builtins;
 with lib;
 let
   cfg = config.profiles.graphical.hyprland;
 
-  # Pull the full palette from the catppuccin/nix pinned palette source (IFD).
-  # config.catppuccin.sources.palette is a derivation whose output contains palette.json.
-  palette = fromJSON (readFile "${config.catppuccin.sources.palette}/palette.json");
-  # Use whichever flavor is set globally so overriding catppuccin.flavor just works.
+  palette = fromJSON (readFile "${catppuccin-palette-src}/palette.json");
   c = palette.${config.catppuccin.flavor}.colors;
 
   # Helpers to produce Hyprland color strings (rgba(RRGGBBAA)) and plain hex (#RRGGBB).

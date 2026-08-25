@@ -23,6 +23,9 @@
 
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
+
+    catppuccin-palette.url = "github:catppuccin/palette";
+    catppuccin-palette.flake = false;
   };
 
   outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
@@ -52,6 +55,7 @@
               ./home-modules/noti
               ./home
             ];
+            _module.args.catppuccin-palette-src = inputs.catppuccin-palette;
             catppuccin.autoEnable = false;
             nixpkgs.overlays = [
               emacs-overlay.overlay
