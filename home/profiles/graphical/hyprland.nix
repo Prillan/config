@@ -26,7 +26,8 @@ in
 
     catppuccin.enable = true;
     catppuccin.flavor = "latte";
-    catppuccin.accent    = "blue";
+    catppuccin.accent = "blue";
+    catppuccin.cache.enable = true;
 
     home.packages = [
       pkgs.grimblast

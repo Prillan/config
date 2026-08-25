@@ -30,7 +30,7 @@ jobs:
         with:
           name: rprecenth
           authToken: ${{ secrets.CACHIX_TOKEN }}
-          extraPullNames: nix-community
+          extraPullNames: nix-community,catppuccin
       - name: Build config
         run: >
           cachix watch-exec rprecenth nix -- run github:Mic92/nix-fast-build -- --no-nom --skip-cached --flake .#homeConfigurations.test.activationPackage
