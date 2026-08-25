@@ -59,7 +59,6 @@ in
         epkgs.ag
 
         # Navigation
-        epkgs.dumb-jump
         epkgs.multiple-cursors
 
         # Git
@@ -93,7 +92,6 @@ in
         epkgs.restclient
         epkgs.ripgrep
         epkgs.string-inflection
-        epkgs.use-package
       ];
     };
 

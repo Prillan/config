@@ -26,14 +26,21 @@
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(tooltip-mode -1)
+(column-number-mode 1)
+(pixel-scroll-precision-mode 1)
+(repeat-mode 1)
+(savehist-mode 1)
+(recentf-mode 1)
+(which-key-mode 1)
 
+(setq inhibit-startup-screen t)
 (setq ring-bell-function #'ignore
       visible-bell nil)
+(setq-default indent-tabs-mode nil)
 
 (setq shell-file-name "bash")
 
-(eval-when-compile
-  (require 'use-package nil t))
 (setq use-package-always-defer t)
 
 (if init-file-debug
@@ -98,10 +105,23 @@
   :after (embark consult)
   :demand t)
 
-(require 'po)
-(require 'po-mode)
+(use-package po-mode
+  :mode "\\.po\\'")
 
-(require 'restclient)
+(use-package restclient
+  :mode (("\\.http\\'" . restclient-mode)
+         ("\\.rest\\'" . restclient-mode)))
+
+(when (treesit-available-p)
+  (setq treesit-font-lock-level 4)
+  (setq major-mode-remap-alist
+        '((python-mode     . python-ts-mode)
+          (js-mode         . js-ts-mode)
+          (javascript-mode . js-ts-mode)
+          (css-mode        . css-ts-mode)
+          (json-mode       . json-ts-mode)
+          (sh-mode         . bash-ts-mode)
+          (yaml-mode       . yaml-ts-mode))))
 
 (use-package doom-themes
   :ensure t
@@ -145,6 +165,12 @@ Saves to a temp file and puts the filename in the kill ring."
    "C" 'string-inflection-camelcase
    "l" 'string-inflection-lower-camelcase
    "s" 'string-inflection-underscore))
+
+(use-package multiple-cursors
+  :bind
+  (("C-ö" . mc/mark-next-like-this)
+   ("C-Ö" . mc/mark-all-like-this)
+   ("C-ä" . mc/mark-next-lines)))
 
 (use-package ispell
   :custom
@@ -231,7 +257,6 @@ Saves to a temp file and puts the filename in the kill ring."
      ".svn"
      ".stack-work"
      ".venv"))
-  (projectile-keymap-prefix "p")
   (projectile-switch-project-action 'projectile-find-file)
   (projectile-globally-ignored-file-suffixes
    '(".elc" ".pyc" ".o" ".hi" ".class" ".cache"))
@@ -263,19 +288,37 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package jq-mode
   :mode "\\.jq\\'")
 
-(require 'lsp)
-(require 'lsp-haskell)
+(use-package dired
+  :custom
+  (dired-dwim-target t))
+
+(use-package tramp
+  :custom
+  (tramp-default-method "ssh")
+  (tramp-completion-reread-directory-timeout 60))
+
+(use-package text-mode
+  :hook (text-mode . turn-on-auto-fill))
+
+(use-package org
+  :custom
+  (org-babel-load-languages '((emacs-lisp . t) (shell . t) (python . t) (sql . t) (dot . t)))
+  (org-confirm-babel-evaluate t)
+  (org-export-backends '(ascii html icalendar latex md odt)))
 
 (use-package lsp-mode
   :hook
   (scala-mode . lsp)
-  (haskell-mode . lsp)
   (rust-mode . lsp)
   (lsp-mode . lsp-lens-mode)
+  :custom
+  (lsp-diagnostics-provider :flycheck)
+  (lsp-keymap-prefix "§")
   :config
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-keymap-prefix "§")
   (define-key lsp-mode-map (kbd "§") lsp-command-map))
+
+(use-package lsp-haskell
+  :hook (haskell-mode . lsp))
 
 (use-package lsp-pyright
   :ensure t
@@ -328,22 +371,10 @@ Saves to a temp file and puts the filename in the kill ring."
   ;; Unset pager as it is not supported properly inside emacs.
   (setenv "GIT_PAGER" ""))
 
-(use-package magit-todos-mode
+(use-package magit-todos
   :defer 2)
 
-(use-package dumb-jump
-  :general
-  (:keymaps
-   'dumb-jump-mode-map
-   "C-c d o" 'dumb-jump-go-other-window
-   "C-c d d" 'dumb-jump-go
-   "C-c d i" 'dumb-jump-go-prompt
-   "C-c d x" 'dumb-jump-go-prefer-external
-   "C-c d z" 'dumb-jump-go-prefer-external-other-window))
-
-(use-package python
-  :hook
-  (python-mode . lsp))
+(use-package python)
 
 (use-package haskell-mode)
 
@@ -793,6 +824,15 @@ Saves to a temp file and puts the filename in the kill ring."
         ((equal w "chapter") "section")
         (t w)))
 
+(use-package tex
+  :custom
+  (TeX-PDF-mode t)
+  (TeX-engine 'xetex)
+  (TeX-save-query nil)
+  (TeX-electric-sub-and-superscript t)
+  (LaTeX-command "latex -shell-escape")
+  (TeX-newline-function 'reindent-then-newline-and-indent))
+
 (defun hash-tex-settings ()
 
   (setq TeX-parse-self t) ; Enable parse on load.
@@ -942,9 +982,6 @@ Saves to a temp file and puts the filename in the kill ring."
 (global-set-key (kbd "C-c f j") 'json-pretty-print)
 (global-set-key (kbd "C-x B")  'mode-line-other-buffer)
 (global-set-key (kbd "C-c C-e") 'replace-last-sexp)
-(global-set-key (kbd "C-ö") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-Ö") 'mc/mark-all-like-this)
-(global-set-key (kbd "C-ä") 'mc/mark-next-lines)
 (global-set-key (kbd "C-c s") 'hash-shell-on-region)
 
 (defun hash-hyper-checkmark ()
@@ -965,16 +1002,5 @@ Saves to a temp file and puts the filename in the kill ring."
 (global-set-key (kbd "C-c h <right>") 'hash-hyper-rightarrow)
 
 (global-unset-key (kbd "C-z"))
-(multiple-cursors-mode)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil))))
- '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
- '(org-level-2 ((t (:inherit outline-2))))
- '(org-level-3 ((t (:inherit outline-3)))))
