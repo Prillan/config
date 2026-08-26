@@ -260,6 +260,8 @@ Saves to a temp file and puts the filename in the kill ring."
   (projectile-switch-project-action 'projectile-find-file)
   (projectile-globally-ignored-file-suffixes
    '(".elc" ".pyc" ".o" ".hi" ".class" ".cache"))
+  :bind (:map projectile-mode-map
+              ("C-c p" . projectile-command-map))
   :config
   (setq projectile-globally-ignored-directories
         (append '("_build"
