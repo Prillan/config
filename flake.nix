@@ -11,7 +11,6 @@
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs-review.url = "github:Mic92/nixpkgs-review";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     flake-utils.url = "github:numtide/flake-utils";
@@ -22,7 +21,7 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, flake-parts, emacs-overlay, nixpkgs-review, flake-utils, unstable, ... }:
+  outputs = inputs@{ self, flake-parts, emacs-overlay, flake-utils, unstable, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } ({ withSystem, config, ... }: {
       systems = [ "x86_64-linux" ];
       imports = [
@@ -37,7 +36,6 @@
             in
             {
               inherit (pkgs) josm nix-zsh-completions;
-              nixpkgs-review = nixpkgs-review.packages.${system}.default;
             };
         };
 

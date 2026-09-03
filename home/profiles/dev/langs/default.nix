@@ -64,7 +64,6 @@ in
         home.packages = [
           pkgs.nixfmt
           pkgs.nixpkgs-fmt
-          pkgs.nixpkgs-review
         ];
         programs.emacs.extraPackages = epkgs: [
           epkgs.nix-mode
