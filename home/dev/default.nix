@@ -5,6 +5,12 @@ let
 in
 {
   options.dev = {
+    githubUser = mkOption {
+      description = "GitHub username, used for `github.user` and forge/ghub token lookups";
+      type = types.str;
+      default = "Prillan";
+    };
+
     dotEmacs = mkOption {
       description = "submodule example";
       type = types.submodule {
@@ -25,6 +31,7 @@ in
 
     home.packages = [
       pkgs.binutils
+      pkgs.gh
       pkgs.git-crypt
       pkgs.hyperfine
       pkgs.kcat
@@ -47,6 +54,10 @@ in
         (use-package envrc
           :hook (after-init . envrc-global-mode))
       '';
+
+    dev.dotEmacs.extraLines = ''
+      (setq +forge/gh-executable "${pkgs.gh}/bin/gh")
+    '';
 
     programs.emacs = {
       enable = true;
@@ -135,13 +146,13 @@ in
       ignores = import ./gitignores.nix;
       settings.user.email = "rasmus@precenth.eu";
       settings.user.name = "Rasmus Précenth";
-      settings.github.user = "Prillan";
+      # Overridable per repository through a conditional include.
+      settings.github.user = cfg.githubUser;
       signing = {
         key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7";
         signByDefault = true;
       };
     };
-    programs.gh.enable = true;
 
     services.emacs.enable = true;
     services.emacs.socketActivation.enable = true;

@@ -376,12 +376,31 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package magit-todos
   :defer 2)
 
+(defvar +forge/gh-executable "gh"
+  "Executable used by `+forge/token-from-gh-cli' to look up tokens.")
+
 (use-package forge
   :after magit
   :config
-  (defun +forge/token-from-gh-cli (host username package &optional nocreate forge)
-    (when (string-suffix-p "github.com" host)
-      (string-trim (shell-command-to-string "gh auth token"))))
+  (defun +forge/gh-host (host)
+    "Turn ghub's API HOST into a hostname the gh CLI understands."
+    (cond ((equal host "api.github.com") "github.com")
+          ((string-suffix-p "/api/v3" host) (substring host 0 -7))
+          (t host)))
+  (defun +forge/token-from-gh-cli (host username _package &optional _nocreate forge)
+    "Return the token gh has stored for USERNAME on HOST, or nil.
+USERNAME comes from the `github.user' git config of the current
+repository, so a conditional include can point work repositories at a
+separate gh account."
+    (when (and (eq (or forge 'github) 'github)
+               (executable-find +forge/gh-executable))
+      (with-temp-buffer
+        (and (zerop (call-process +forge/gh-executable nil t nil
+                                  "auth" "token"
+                                  "--hostname" (+forge/gh-host host)
+                                  "--user" username))
+             (let ((token (string-trim (buffer-string))))
+               (unless (string= token "") token))))))
   (advice-add 'ghub--token :before-until #'+forge/token-from-gh-cli))
 
 (use-package python)
