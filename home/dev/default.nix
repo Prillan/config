@@ -135,11 +135,13 @@ in
       ignores = import ./gitignores.nix;
       settings.user.email = "rasmus@precenth.eu";
       settings.user.name = "Rasmus Précenth";
+      settings.github.user = "Prillan";
       signing = {
         key = "6A3950D91C1FA0F728D115E73E4C7B34D80F07F7";
         signByDefault = true;
       };
     };
+    programs.gh.enable = true;
 
     services.emacs.enable = true;
     services.emacs.socketActivation.enable = true;

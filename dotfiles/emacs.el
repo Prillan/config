@@ -376,6 +376,14 @@ Saves to a temp file and puts the filename in the kill ring."
 (use-package magit-todos
   :defer 2)
 
+(use-package forge
+  :after magit
+  :config
+  (defun +forge/token-from-gh-cli (host username package &optional nocreate forge)
+    (when (string-suffix-p "github.com" host)
+      (string-trim (shell-command-to-string "gh auth token"))))
+  (advice-add 'ghub--token :before-until #'+forge/token-from-gh-cli))
+
 (use-package python)
 
 (use-package haskell-mode)
