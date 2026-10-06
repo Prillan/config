@@ -5,6 +5,16 @@ let
 in
 {
   options.dev = {
+    treesitGrammars = mkOption {
+      description = ''
+        tree-sitter languages to build into Emacs, e.g. "python". Each entry
+        must name a `pkgs.tree-sitter.builtGrammars.tree-sitter-<lang>'.
+        Collected across modules, so a language profile can declare the
+        grammars its `*-ts-mode' needs.
+      '';
+      type = types.listOf types.str;
+      default = [ ];
+    };
     dotEmacs = mkOption {
       description = "submodule example";
       type = types.submodule {
@@ -22,6 +32,10 @@ in
 
   config = {
     programs.jq.enable = true;
+
+    # Languages dotfiles/emacs.el remaps to *-ts-mode unconditionally.
+    # Language-gated modes add their own in home/profiles/dev/langs.
+    dev.treesitGrammars = [ "bash" "css" "javascript" "json" "yaml" ];
 
     home.packages = [
       pkgs.binutils
@@ -70,6 +84,11 @@ in
         epkgs.envrc
         epkgs.projectile
         epkgs.projectile-ripgrep
+
+        # Tree-sitter grammars, collected from dev.treesitGrammars
+        (epkgs.treesit-grammars.with-grammars (
+          g: map (lang: g."tree-sitter-${lang}") (unique cfg.treesitGrammars)
+        ))
 
         # Themes
         epkgs.catppuccin-theme

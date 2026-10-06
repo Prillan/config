@@ -29,6 +29,8 @@ in
     # Python
     (mkIf cfg.python.enabled
       {
+        # python-ts-mode via major-mode-remap-alist
+        dev.treesitGrammars = [ "python" ];
         home.packages = [
           pkgs.pyright
         ];
@@ -158,6 +160,8 @@ in
           beamPackages.elixir_1_20
           beamPackages.expert
         ];
+        # elixir-ts-mode; heex is required for its embedded templates
+        dev.treesitGrammars = [ "elixir" "heex" ];
         dev.dotEmacs.extraLines = ''
           (require 'elixir-ts-mode)
           (add-hook 'elixir-ts-mode-hook #'lsp-deferred)
