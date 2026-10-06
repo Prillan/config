@@ -237,6 +237,10 @@ in
       settings = {
         enable_audio_bell       = false;
         touch_scroll_multiplier = 5;
+        # Hyprland reports tiled windows as maximized (xdg_toplevel state
+        # MAXIMIZED), so kitty persists "window-state": "maximized" to
+        # ~/.cache/kitty/main.json on every exit.
+        remember_window_size    = false;
       };
     };
 
