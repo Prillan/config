@@ -19,7 +19,8 @@
     ],
     "lockFileMaintenance": {
         "enabled": true,
-        "extends": ["schedule:weekly"]
+        "extends": ["schedule:weekly"],
+        "automerge": true
     },
     "nix": {
         "enabled": true
