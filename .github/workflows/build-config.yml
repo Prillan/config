@@ -20,7 +20,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@cf1e78c50ca91e757bab3edc229027eebfc07871 # main
       - name: Install Nix
-        uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31
+        uses: cachix/install-nix-action@382a9ed9481c7c1f94f68b72ef105b3417c73877 # v32
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GH_TOKEN_FOR_UPDATES }}
