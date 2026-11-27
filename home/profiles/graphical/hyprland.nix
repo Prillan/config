@@ -161,6 +161,7 @@ in
     home.packages = [
       pkgs.grimblast
       pkgs.wofi
+      pkgs.wl-clipboard
       pkgs.brightnessctl
       hyprSolo
       hyprLid
