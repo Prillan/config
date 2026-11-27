@@ -10,13 +10,8 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [
-      pkgs.pnmixer
-
       # "Apps"
-      pkgs.discord
       pkgs.evince
-      pkgs.telegram-desktop
-      pkgs.thunderbird
 
       # Fonts
       pkgs.carlito

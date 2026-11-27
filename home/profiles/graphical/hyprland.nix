@@ -19,7 +19,13 @@ let
   #
   # Desk layout: Asus (1080p) on the left, Samsung (1440p) to its right,
   # bottom edges aligned (the Asus is 360px shorter, hence y=360). The laptop
-  # panel lands to the right of the Samsung.
+  # panel sits to the right of the Samsung (1920 + 2560 = 4480).
+  #
+  # The laptop position is fixed rather than auto-right: Hyprland places auto
+  # outputs in connection order, and an eDP-1 re-enabled by hypr-lid joins the
+  # end of that list, so auto-right would put it after whatever else is
+  # plugged in. Fixed coordinates only matter relative to each other, so on
+  # its own, or next to fallback-placed outputs, 4480x0 behaves like 0x0.
   # Modes are spelled out rather than using highrr/highres: on this pair those
   # keywords resolve inconsistently (highrr picks the Samsung's 1024x768@75.03
   # over 2560x1440@74.998, since it optimises refresh alone).
@@ -31,7 +37,7 @@ let
   # you want a single monitor at its own maximum.
   monitorAsus    = "desc:ASUSTek COMPUTER INC VG259 L6LMQS191984, 1920x1080@143.61, 0x360, 1";
   monitorSamsung = "desc:Samsung Electric Company LS27A600U H4ZRC01423, 2560x1440@59.951, 1920x0, 1";
-  monitorLaptop  = "eDP-1, preferred, auto-right, 1";
+  monitorLaptop  = "eDP-1, preferred, 4480x0, ${cfg.laptopScale}";
 
   hyprctlBin = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl";
 
@@ -130,6 +136,18 @@ in
 {
   options.profiles.graphical.hyprland = {
     enable = mkEnableOption "Hyprland graphical profile";
+    fallbackMonitor = mkOption {
+      type = types.str;
+      default = ", preferred, auto, 1";
+      example = ", preferred, auto-center-up, 1";
+      description = "Monitor rule for outputs without a specific rule.";
+    };
+    laptopScale = mkOption {
+      type = types.str;
+      default = "1";
+      example = "1.566667";
+      description = "Scale for eDP-1. Must divide the panel into whole logical pixels.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -258,7 +276,7 @@ in
           monitorAsus
           monitorSamsung
           monitorLaptop
-          ", preferred, auto, 1"
+          cfg.fallbackMonitor
         ];
         "$mod"   = "SUPER";
 

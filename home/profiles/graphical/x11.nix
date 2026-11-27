@@ -10,6 +10,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [
+      pkgs.pnmixer # Started by xsession.initExtra
       pkgs.scrot
       pkgs.xclip
       pkgs.xmonad-log # Required by xmonad/polybar

@@ -13,7 +13,10 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       # gnucash
+      discord
       libreoffice
+      telegram-desktop
+      thunderbird
       zoom-us
     ];
   };
