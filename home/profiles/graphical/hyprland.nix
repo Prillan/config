@@ -6,6 +6,7 @@ let
 
   palette = fromJSON (readFile "${catppuccin-palette-src}/palette.json");
   c = palette.${config.catppuccin.flavor}.colors;
+  accent = c.${config.catppuccin.accent};
 
   # Palette .hex values carry a leading "#", hence the substring.
   raw  = entry: substring 1 6 entry.hex;            # "1e66f5"
@@ -154,8 +155,8 @@ in
     profiles.graphical.common.enable = true;
 
     catppuccin.enable = true;
-    catppuccin.flavor = "latte";
-    catppuccin.accent = "blue";
+    catppuccin.flavor = mkDefault "latte";
+    catppuccin.accent = mkDefault "blue";
     catppuccin.cache.enable = true;
 
     home.packages = [
@@ -218,7 +219,7 @@ in
 
       menu > menuitem:hover,
       menu > menuitem:active {
-        background-color: ${c.blue.hex};
+        background-color: ${accent.hex};
         color: ${c.base.hex};
       }
 
@@ -294,7 +295,7 @@ in
           gaps_in       = 5;
           gaps_out      = 10;
           border_size   = 2;
-          "col.active_border"   = "${rgba c.blue "ff"} ${rgba c.lavender "ff"} 45deg";
+          "col.active_border"   = "${rgba accent "ff"} ${rgba c.lavender "ff"} 45deg";
           "col.inactive_border" = rgba c.surface1 "ff";
           layout        = "dwindle";
           allow_tearing = false;
